@@ -1,0 +1,28 @@
+<!-- @dsCard group="Surfaces" height=300 subtitle="Solid, glass and inset" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Card — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-grid"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment, null,
+    h(L.Card, { title: 'Sprint 42', description: '12 of 18 tasks done' }, h(L.Progress, { value: 67, label: 'Scope' })),
+    h('div', { style: { position: 'relative', overflow: 'hidden', padding: 16, borderRadius: 24, background: 'var(--accent-soft)' } },
+      h('span', { style: { position: 'absolute', width: 96, height: 96, right: 12, top: -20, borderRadius: 9999, background: 'var(--chart-2)' } }),
+      h('span', { style: { position: 'absolute', width: 140, height: 44, left: 20, bottom: 10, borderRadius: 9999, background: 'var(--accent)' } }),
+      h(L.Card, { variant: 'glass', title: 'Glass panel', description: 'Floating bars and the composer only.' })),
+    h(L.Card, { variant: 'inset', title: 'Inset well', description: 'Groups content inside a card.' })
+  ));
+</script>
+</body>
+</html>

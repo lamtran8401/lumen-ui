@@ -1,0 +1,40 @@
+<!-- @dsCard group="Work tracking" height=420 width=1040 subtitle="Columns with WIP limits; cards animate between columns" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Board — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-col"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  var tasks = [
+    { id: 'CB-150', title: 'Add run cost to the summary', status: 'todo', tags: ['harness'] },
+    { id: 'CB-142', title: 'Stream tool output into the callboard', status: 'doing', priority: 'p1', progress: 60, assignee: { name: 'builder-agent', kind: 'agent' } },
+    { id: 'CB-144', title: 'Diff viewer for agent edits', status: 'doing', assignee: { name: 'Lam Tran' } },
+    { id: 'CB-139', title: 'Write the retry guide chapter', status: 'review', due: 'Nov 4', assignee: { name: 'review-agent', kind: 'agent' } },
+    { id: 'CB-120', title: 'Token budget per run', status: 'done', assignee: { name: 'Lam Tran' } }
+  ];
+  function Demo() {
+    var s = React.useState(tasks), list = s[0], set = s[1];
+    var cols = [['todo', 'To do'], ['doing', 'In progress', 2], ['review', 'In review'], ['done', 'Done']];
+    function advance(t) {
+      var order = ['todo', 'doing', 'review', 'done'];
+      var next = order[(order.indexOf(t.status) + 1) % order.length];
+      set(list.map(function (x) { return x.id === t.id ? Object.assign({}, x, { status: next }) : x; }));
+    }
+    return h(L.Board, { onOpenTask: advance, columns: cols.map(function (c) {
+      return { id: c[0], title: c[1], limit: c[2], tasks: list.filter(function (t) { return t.status === c[0]; }) };
+    }) });
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(h(Demo));
+</script>
+</body>
+</html>

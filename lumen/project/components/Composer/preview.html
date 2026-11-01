@@ -1,0 +1,24 @@
+<!-- @dsCard group="AI agent" height=220 subtitle="Glass prompt box; Enter sends, Shift+Enter adds a line" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Composer — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-col"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment, null,
+    h(L.Composer, { placeholder: 'Ask ops-agent…', context: h(L.Badge, { tone: 'accent' }, 'repo: story-ui') }),
+    h(L.Composer, { busy: true, defaultValue: 'Split the batch into 10k rows' })
+  ));
+</script>
+</body>
+</html>

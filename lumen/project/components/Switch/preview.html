@@ -1,0 +1,24 @@
+<!-- @dsCard group="Forms" height=140 subtitle="Settings toggle with label and description" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Switch — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-col"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment, null,
+    h(L.Switch, { defaultChecked: true, label: 'Auto-approve read-only tools', description: 'The agent runs grep, read and list without a prompt.' }),
+    h(L.Switch, { label: 'Allow network access', description: 'Off by default for every new run.' })
+  ));
+</script>
+</body>
+</html>

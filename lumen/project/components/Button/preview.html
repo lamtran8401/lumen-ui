@@ -1,0 +1,29 @@
+<!-- @dsCard group="Actions" height=120 subtitle="Primary, secondary, ghost, danger; three sizes and icon" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Button — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-row"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(h(React.Fragment, null,
+    h(L.Button, { variant: 'primary' }, 'Start run'),
+    h(L.Button, null, 'View log'),
+    h(L.Button, { variant: 'ghost' }, 'Cancel'),
+    h(L.Button, { variant: 'danger' }, 'Stop agent'),
+    h(L.Button, { variant: 'primary', loading: true }, 'Deploying'),
+    h(L.Button, { size: 'sm' }, 'Small'),
+    h(L.Button, { size: 'lg', variant: 'primary' }, 'Large')
+  ));
+</script>
+</body>
+</html>

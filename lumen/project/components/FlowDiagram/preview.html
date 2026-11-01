@@ -1,0 +1,34 @@
+<!-- @dsCard group="Data viz" height=300 width=880 subtitle="Agent harness flow; the active edge pulses" -->
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FlowDiagram — preview</title>
+<style>
+  body { padding: 20px; background: var(--canvas); }
+  .pv-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .pv-col { display: flex; flex-direction: column; gap: 16px; max-width: 680px; }
+  .pv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+<div id="root" class="pv-col"></div>
+<script>
+  var L = window.Lumen, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById("root")).render(h(L.FlowDiagram, { title: 'Engineering harness',
+    nodes: [
+      { id: 'you', label: 'You', caption: 'task brief', kind: 'human', x: 0, y: 70 },
+      { id: 'plan', label: 'planner-agent', caption: 'splits work', kind: 'agent', x: 220, y: 0 },
+      { id: 'tools', label: 'Tool sandbox', caption: 'read, edit, test', kind: 'tool', x: 440, y: 0 },
+      { id: 'gate', label: 'Review gate', caption: 'human approves', kind: 'gate', x: 440, y: 140 },
+      { id: 'repo', label: 'Repository', caption: 'pull request', kind: 'store', x: 660, y: 140 }
+    ],
+    edges: [
+      { from: 'you', to: 'plan', label: 'brief' },
+      { from: 'plan', to: 'tools', active: true },
+      { from: 'tools', to: 'gate', label: 'diff' },
+      { from: 'gate', to: 'repo', label: 'merge' }
+    ] }));
+</script>
+</body>
+</html>
