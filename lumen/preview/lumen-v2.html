@@ -315,11 +315,11 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 .field .hint { font-size: 12px; color: var(--fg-muted); }
 .field.is-error .hint { color: var(--red-ink); }
 .list { width: 100%; max-width: 520px; background: var(--surface); box-shadow: var(--shadow-1); padding: 4px; }
-.list-row { display: flex; align-items: center; gap: 12px; padding: 9px 10px; min-height: 48px; transition: background-color 140ms var(--out); }
-.list-row + .list-row { box-shadow: 0 -1px 0 var(--hair); }
+.list-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 10px; min-height: 48px; transition: background-color 140ms var(--out); }
+.list-row + .list-row::before { content: ""; position: absolute; top: 0; left: 10px; right: 10px; height: 1px; background: var(--hair); transition: opacity 140ms var(--out); }
 .list-row.is-interactive { cursor: pointer; }
-.list-row.is-interactive:hover { background: var(--track); box-shadow: none; }
-.list-row.is-interactive:hover + .list-row { box-shadow: none; }
+.list-row.is-interactive:hover { background: var(--track); }
+.list-row.is-interactive:hover::before, .list-row.is-interactive:hover + .list-row::before { opacity: 0; }
 .list-row__main { flex: 1; min-width: 0; }
 .list-row__title { font-size: 14px; font-weight: 500; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-row__meta { font-size: 12.5px; color: var(--fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -646,6 +646,17 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 .toast__title { font-weight: 500; }
 .toast__desc { font-size: 12.5px; color: var(--fg-muted); }
 
+.highlight { width: 100%; max-width: 520px; padding: 20px 22px 22px; background: linear-gradient(180deg, var(--t-subtle) 0%, var(--surface) 62%); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--t) 70%, transparent); display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.highlight__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
+.highlight__head h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.015em; }
+.highlight__eyebrow { font-size: 13px; font-weight: 600; color: var(--t-ink); }
+.highlight__sub { margin: -6px 0 2px; font-size: 13.5px; color: var(--fg-subtle); }
+.highlight ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.highlight li { position: relative; padding-left: 20px; font-size: 14.5px; line-height: 22px; }
+.highlight li::before { content: ""; position: absolute; left: 2px; top: 8px; width: 7px; height: 7px; border-radius: 99px; background: var(--t); }
+.highlight li b { font-weight: 600; }
+.highlight__foot { display: flex; gap: 8px; margin-top: 4px; }
+
 /* ---------- app shells ---------- */
 .shell { width: 100%; height: 460px; display: grid; overflow: hidden; background: var(--bg); box-shadow: inset 0 0 0 1px var(--border); text-align: left; }
 .shell-cq { width: 100%; container-type: inline-size; }
@@ -910,6 +921,10 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
     disclosure: (a = {}) => `<div class="disc r-row${a.open ? ' is-open' : ''}"><button class="disc__head" aria-expanded="${!!a.open}">${U.status({ status: a.status ?? 'done' })}<span class="disc__name">${esc(a.name ?? 'read_file')}</span><span class="disc__meta">${esc(a.meta ?? 'src/app.ts')}</span><span class="disc__end">${esc(a.end ?? '84 ms')}</span>${icon('chev', 'disc__chev')}</button><div class="disc__body"><div><div class="disc__inner"><span class="label">${esc(a.bodyLabel ?? 'Output')}</span><pre class="pre r-chip">${esc(a.body ?? 'const BATCH = 50_000')}</pre></div></div></div></div>`,
     timeline: (a = {}) => `<ol class="timeline">${(a.steps ?? []).map((s) => { const st = STATUS[s.status]; return `<li class="tl t-${st.tone}${s.status === 'queued' ? ' is-wait' : ''}"><span class="tl__rail"><span class="tl__node${s.status === 'running' ? ' pulse' : ''}">${icon(st.icon)}</span></span><div class="tl__body"><div class="tl__row">${esc(s.label)}<span>${esc(s.meta ?? st.label.toLowerCase())}</span></div>${s.detail ? `<div class="tl__detail">${esc(s.detail)}</div>` : ''}</div></li>`; }).join('')}</ol>`,
     prompt: (a = {}) => `<div class="prompt r-panel"><textarea rows="2" placeholder="${esc(a.placeholder ?? 'Ask anything…')}" aria-label="Message">${esc(a.value ?? '')}</textarea><div class="prompt__bar">${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'clip', label: 'Attach' })}${(a.chips ?? ['brief.pdf']).map((c) => U.tag({ kind: 'line', label: c })).join('')}<span class="send">${a.busy ? U.button({ variant: 'plain', iconOnly: true, icon: 'stop', label: 'Stop' }) : U.button({ variant: 'ink', iconOnly: true, icon: 'up', label: 'Send' })}</span></div></div>`,
+    highlight: (a = {}) => {
+      const items = a.items ?? [['Search that reads your files.', 'Ask a question and get the page, not a list of links.'], ['Shared folders.', 'Invite a team and keep one copy of every file.'], ['Offline mode.', 'Edit on a plane; changes sync when you land.'], ['Undo for 30 days.', 'Every delete waits a month before it is final.']];
+      return `<section class="highlight r-panel t-${a.tone ?? 'amber'}"><div class="highlight__head"><h3>${esc(a.title ?? 'New in Acme 3.0')}</h3>${a.eyebrow !== '' ? `<span class="highlight__eyebrow">${esc(a.eyebrow ?? 'this release')}</span>` : ''}</div>${a.sub !== '' ? `<p class="highlight__sub">${esc(a.sub ?? 'four changes you will notice first')}</p>` : ''}<ul>${items.slice(0, a.count ?? items.length).map(([b, t]) => `<li><b>${esc(b)}</b> ${esc(t)}</li>`).join('')}</ul>${a.actions ? `<div class="highlight__foot">${U.button({ size: 'sm', label: 'See what is new' })}${U.button({ variant: 'quiet', size: 'sm', label: 'Later' })}</div>` : ''}</section>`;
+    },
     callout: (a = {}) => { const k = { 'in-short': ['blue', 'info', 'In short'], 'good-to-know': ['green', 'bulb', 'Good to know'], 'watch-out': ['amber', 'warn', 'Watch out'] }[a.kind ?? 'in-short']; return `<div class="callout t-${k[0]}">${icon(k[1])}<b>${esc(a.title ?? k[2])}</b><p>${esc(a.text ?? 'Metrics count events. Traces show the path of one request.')}</p></div>`; },
     code: (a = {}) => `<div class="code r-row"><div class="code__head">${esc(a.file ?? 'otel.config.ts')}${U.button({ variant: 'quiet', size: 'sm', icon: 'copy', label: 'Copy' }).replace('<button', '<button data-copy')}</div><pre>${a.html ?? '<span class="k">export const</span> sampler = <span class="k">new</span> TraceIdRatioBasedSampler(<span class="s">0.1</span>)\n<span class="c">// keep every error trace</span>\n<span class="k">export const</span> keepErrors = (span) =&gt; span.status.code === SpanStatusCode.ERROR'}</pre></div>`,
     table: (a = {}) => `<div class="dtable r-card"><table><thead><tr>${(a.cols ?? []).map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${(a.rows ?? []).map((r) => `<tr>${r.map((v, i) => `<td${i && /^[\d.,%+–\- ]+$/.test(v) ? ' class="n"' : ''}>${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
@@ -1091,6 +1106,9 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       render: (a) => C.timeline({ steps: runSteps.map((s, i) => ({ ...s, status: i < a.runningStep ? 'done' : i === a.runningStep ? 'running' : 'queued', meta: i < a.runningStep ? 'done' : undefined })) }), stories: [] },
     { id: 'prompt', name: 'PromptInput', level: 'composition', group: 'Conversation', uses: ['textarea', 'tag', 'button', 'surface'], summary: 'The message box. Enter sends; Shift+Enter adds a line.',
       props: [P('placeholder', '', txt('Ask anything…')), P('busy', 'Send becomes Stop', bool(false))], render: C.prompt, stories: [] },
+    { id: 'highlight', name: 'HighlightCard', level: 'composition', group: 'Content', uses: ['surface', 'button'], summary: 'Announces what is new or what makes a product different. A tinted top fades into the surface. Use one for each page, and never for a warning.',
+      props: [P('tone', 'amber: new · blue: product · violet: beta', sel(['amber', 'blue', 'violet', 'green'], 'amber')), P('title', '', txt('New in Acme 3.0')), P('eyebrow', '', txt('this release')), P('sub', '', txt('four changes you will notice first')), P('count', 'Bullets', num(1, 4, 4)), P('actions', 'Show buttons', bool(false))], render: C.highlight,
+      stories: [['Tones', 'The tone names the kind of news, not its urgency.', () => `<div class="grid-auto" style="max-width:860px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${C.highlight({ tone: 'blue', title: 'Why teams pick Acme', eyebrow: '', sub: '', count: 2 })}${C.highlight({ tone: 'violet', title: 'Try the beta', eyebrow: 'opt in', sub: '', count: 2, actions: true })}</div>`]] },
     { id: 'callout', name: 'Callout', level: 'composition', group: 'Content', uses: ['surface'], summary: 'A side note inside long-form text: a colored rule, a label and the note. It has no box, so it reads as part of the article. Use Alert for system messages.',
       props: [P('kind', '', sel(['in-short', 'good-to-know', 'watch-out'], 'in-short')), P('text', '', txt('Metrics count events. Traces show the path of one request.'))], render: C.callout,
       stories: [['All kinds', '', () => `<div class="stack" style="width:100%;align-items:center">${C.callout({ kind: 'in-short' })}${C.callout({ kind: 'good-to-know', text: 'At 400 spans per second, the queue holds about 5 seconds of spans.' })}${C.callout({ kind: 'watch-out', text: 'A label with user IDs creates one time series for each user.' })}</div>`]] },
@@ -1216,7 +1234,7 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 
   function componentPage(e) {
     const args = defaults(e);
-    const isWide = ['shell-sidebar', 'shell-topnav', 'shell-split', 'shell-mobile', 'alert', 'accordion', 'dialog', 'sheet', 'topbar', 'dl', 'file-drop', 'command', 'column', 'chart', 'diagram', 'table', 'action', 'list-row', 'message', 'prompt', 'callout', 'code', 'disclosure', 'stages', 'timeline'].includes(e.id);
+    const isWide = ['highlight', 'shell-sidebar', 'shell-topnav', 'shell-split', 'shell-mobile', 'alert', 'accordion', 'dialog', 'sheet', 'topbar', 'dl', 'file-drop', 'command', 'column', 'chart', 'diagram', 'table', 'action', 'list-row', 'message', 'prompt', 'callout', 'code', 'disclosure', 'stages', 'timeline'].includes(e.id);
     const rel = (title, ids) => `<div class="rel r-row"><b>${title}</b><div class="links">${ids.length ? ids.map((id) => `<a class="tag tag--line r-chip" href="#${id}">${esc(byId.get(id).name)}</a>`).join('') : '<span class="none">—</span>'}</div></div>`;
     return `${crumb(`<a href="#overview">Docs</a>`, e.level === 'unit' ? 'Units' : 'Compositions', esc(e.group))}
       <div class="doc-head"><div><h1>${esc(e.name)}</h1><p>${esc(e.summary)}</p></div><div class="row">${levelBadge(e)}</div></div>
