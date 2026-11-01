@@ -100,7 +100,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .brand__mark { width: 22px; height: 22px; background: var(--fg); border-radius: 7px; corner-shape: var(--corner); display: grid; place-items: center; }
 .brand__mark i { width: 8px; height: 8px; border-radius: 99px; background: var(--amber); }
 .brand small { font-weight: 400; color: var(--fg-muted); font-size: 13px; }
-.menu-btn { display: none; }
+.bar .menu-btn { display: none; }
 .tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .tool-label { font-size: 12px; color: var(--fg-muted); }
 .app { display: grid; grid-template-columns: 252px minmax(0, 1fr); }
@@ -136,6 +136,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .canvas.dots { background-image: radial-gradient(var(--hair) 1px, transparent 1px); background-size: 16px 16px; }
 .canvas > .stage-in { width: 100%; display: flex; justify-content: center; }
 .canvas.wide > .stage-in { display: block; }
+.canvas.wide > .stage-in > * { margin-inline: auto; }
 .canvas .fit { max-width: 100%; }
 .addons { margin-top: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); overflow: hidden; }
 .addons__tabs { display: flex; gap: 18px; padding: 0 16px; border-bottom: 1px solid var(--hair); }
@@ -473,6 +474,125 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 .edge-l { font: 400 10.5px var(--mono); fill: var(--fg-muted); }
 .arrow { fill: var(--fg-subtle); }
 
+/* ---------- general-purpose compositions ---------- */
+.link { color: var(--blue-ink); font-weight: 500; text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--blue) 40%, transparent); text-underline-offset: 3px; cursor: pointer; }
+.link:hover { text-decoration-color: currentColor; }
+.select { display: flex; width: 100%; }
+.row > .select { width: auto; min-width: 180px; }
+.select select { appearance: none; width: 100%; height: 36px; padding: 0 34px 0 12px; border: 0; cursor: pointer; font-size: 14px; background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; box-shadow: inset 0 0 0 1px var(--border); transition: box-shadow 140ms var(--out); }
+.select select:hover { box-shadow: inset 0 0 0 1px var(--border-strong); }
+.select select:focus-visible { outline: 0; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--blue) 70%, transparent), 0 0 0 3px color-mix(in oklch, var(--blue) 16%, transparent); }
+.select select:disabled { opacity: .5; cursor: not-allowed; }
+.slider { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 6px; }
+.slider__meta { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; }
+.slider input { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; --p: 50%; }
+.slider input::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(var(--fg), var(--fg)) 0 / var(--p) 100% no-repeat, var(--track); }
+.slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 99px; background: oklch(1 0 0); box-shadow: 0 0 0 .5px var(--sh-a), 0 1px 3px oklch(0 0 0 / .25); transition: transform 220ms var(--ease); }
+.slider input:active::-webkit-slider-thumb { transform: scale(1.12); }
+.slider input::-moz-range-track { height: 6px; border-radius: 99px; background: var(--track); }
+.slider input::-moz-range-progress { height: 6px; border-radius: 99px; background: var(--fg); }
+.slider input::-moz-range-thumb { width: 20px; height: 20px; border: 0; border-radius: 99px; background: oklch(1 0 0); box-shadow: 0 0 0 .5px var(--sh-a), 0 1px 3px oklch(0 0 0 / .25); }
+.alert { width: 100%; max-width: 620px; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 2px 10px; padding: 12px 14px 12px 16px; align-items: start; background: var(--t-subtle); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--t) 24%, transparent); }
+.alert > .ic { color: var(--t-ink); margin-top: 3px; }
+.alert__title { grid-column: 2; font-size: 14px; font-weight: 600; line-height: 22px; }
+.alert__text { grid-column: 2; font-size: 13.5px; line-height: 21px; color: var(--fg-muted); }
+.alert__act { grid-column: 3; grid-row: 1 / span 2; align-self: center; display: flex; gap: 6px; }
+.acc { width: 100%; max-width: 560px; background: var(--surface); box-shadow: var(--shadow-1); padding: 2px 16px; }
+.acc__item + .acc__item { border-top: 1px solid var(--hair); }
+.acc__head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border: 0; background: none; cursor: pointer; font-size: 14.5px; font-weight: 500; text-align: left; }
+.acc__head .ic { color: var(--fg-subtle); transition: transform 300ms var(--ease); }
+.acc__item.is-open .acc__head .ic { transform: rotate(180deg); }
+.acc__body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 360ms var(--ease); }
+.acc__item.is-open .acc__body { grid-template-rows: 1fr; }
+.acc__body > div { overflow: hidden; }
+.acc__body p { margin: 0 0 14px; font-size: 14px; line-height: 22px; color: var(--fg-muted); max-width: 60ch; }
+.overlay-stage { width: 100%; min-height: 340px; display: grid; place-items: center; padding: 24px 16px; background: color-mix(in oklch, var(--fg) 16%, var(--bg)); }
+.dialog { width: 100%; max-width: 420px; background: var(--surface); box-shadow: var(--shadow-3); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.dialog h3, .drawer h3 { margin: 0; font-size: 17px; font-weight: 600; line-height: 24px; letter-spacing: -.01em; }
+.dialog__head p, .drawer__head p { margin: 4px 0 0; font-size: 13.5px; line-height: 20px; color: var(--fg-muted); }
+.dialog__foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.drawer-stage { position: relative; width: 100%; height: 400px; background: color-mix(in oklch, var(--fg) 16%, var(--bg)); overflow: hidden; }
+.drawer { position: absolute; top: 10px; right: 10px; bottom: 10px; width: min(340px, calc(100% - 20px)); background: var(--surface); box-shadow: var(--shadow-3); padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.drawer__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.drawer__foot { margin-top: auto; display: flex; gap: 8px; justify-content: flex-end; }
+.pop-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.popover { width: 300px; max-width: 100%; background: var(--surface); box-shadow: var(--shadow-3); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.popover h4 { margin: 0; font-size: 14px; font-weight: 600; }
+.popover p { margin: 2px 0 0; font-size: 12.5px; color: var(--fg-muted); }
+.menu { width: 236px; max-width: 100%; background: var(--surface); box-shadow: var(--shadow-3); padding: 4px; display: flex; flex-direction: column; }
+.menu__label { padding: 8px 10px 4px; font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-subtle); }
+.menu__item { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 10px; border: 0; background: none; font-size: 13.5px; text-align: left; cursor: pointer; color: var(--fg); transition: background-color 120ms var(--out); }
+.menu__item .ic { width: 15px; height: 15px; color: var(--fg-muted); }
+.menu__item:hover, .menu__item.is-active { background: var(--track); }
+.menu__item .kbd { margin-left: auto; color: var(--fg-subtle); box-shadow: inset 0 0 0 1px var(--border-strong); opacity: 1; }
+.menu__item.is-danger, .menu__item.is-danger .ic { color: var(--red-ink); }
+.menu .sep { margin: 4px 0; }
+.cmd { width: 100%; max-width: 540px; background: var(--surface); box-shadow: var(--shadow-3); overflow: hidden; }
+.cmd__search { display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 52px; border-bottom: 1px solid var(--hair); }
+.cmd__search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font-size: 15px; }
+.cmd__search .ic { width: 17px; height: 17px; color: var(--fg-subtle); }
+.cmd__list { padding: 6px; display: flex; flex-direction: column; }
+.cmd .menu__item { height: 38px; }
+.cmd__foot { display: flex; flex-wrap: wrap; gap: 14px; padding: 9px 14px; border-top: 1px solid var(--hair); font-size: 12px; color: var(--fg-subtle); }
+.cmd__foot span { display: inline-flex; gap: 6px; align-items: center; }
+.bc { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; color: var(--fg-muted); }
+.bc a { color: inherit; text-decoration: none; }
+.bc a:hover { color: var(--fg); }
+.bc .ic { width: 14px; height: 14px; color: var(--fg-subtle); }
+.bc [aria-current] { color: var(--fg); font-weight: 500; }
+.pager { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.pager .btn { min-width: 32px; padding: 0 10px; }
+.pager .btn[aria-current="page"] { background: var(--surface); color: var(--fg); box-shadow: var(--shadow-1); }
+.pager .gap { padding: 0 6px; color: var(--fg-subtle); }
+.topbar { width: 100%; display: flex; align-items: center; gap: 16px; height: 56px; padding: 0 10px 0 16px; background: var(--surface); box-shadow: var(--shadow-1); }
+.topbar__brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14.5px; white-space: nowrap; }
+.topbar__nav { display: flex; gap: 2px; }
+.topbar__nav a { padding: 6px 12px; font-size: 13.5px; font-weight: 500; color: var(--fg-muted); text-decoration: none; white-space: nowrap; transition: background-color 140ms var(--out), color 140ms var(--out); }
+.topbar__nav a:hover { color: var(--fg); background: var(--track); }
+.topbar__nav a[aria-current] { color: var(--fg); background: var(--track); }
+.topbar__end { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.navside { width: 100%; max-width: 240px; display: flex; flex-direction: column; gap: 1px; padding: 10px; }
+.navside a { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; font-size: 13.5px; color: var(--fg-muted); text-decoration: none; transition: background-color 140ms var(--out), color 140ms var(--out); }
+.navside a .ic { width: 16px; height: 16px; }
+.navside a:hover { color: var(--fg); background: var(--track); }
+.navside a[aria-current] { color: var(--fg); background: var(--surface); box-shadow: var(--shadow-1); font-weight: 500; }
+.navside a .cnt { margin-left: auto; font: 500 11px var(--mono); color: var(--fg-subtle); }
+.navside__label { padding: 14px 10px 4px; font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-subtle); }
+.dl { width: 100%; max-width: 520px; margin: 0; background: var(--surface); box-shadow: var(--shadow-1); padding: 2px 16px; }
+.dl > div { display: grid; grid-template-columns: minmax(100px, 150px) minmax(0, 1fr); gap: 12px; padding: 11px 0; font-size: 13.5px; align-items: center; }
+.dl > div + div { border-top: 1px solid var(--hair); }
+.dl dt { color: var(--fg-muted); }
+.dl dd { margin: 0; min-width: 0; }
+.cal { width: 300px; max-width: 100%; background: var(--surface); box-shadow: var(--shadow-1); padding: 12px; }
+.cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 14px; font-weight: 600; padding-left: 6px; }
+.cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal__dow { font-size: 11px; color: var(--fg-subtle); padding: 6px 0; }
+.cal__day { height: 36px; border: 0; background: none; border-radius: 99px; font-size: 13px; cursor: pointer; font-variant-numeric: tabular-nums; transition: background-color 140ms var(--out), color 140ms var(--out); }
+.cal__day:hover { background: var(--track); }
+.cal__day.is-out { color: var(--fg-subtle); opacity: .55; }
+.cal__day.is-today { box-shadow: inset 0 0 0 1px var(--border-strong); }
+.cal__day[aria-pressed="true"] { background: var(--fg); color: var(--on-ink); box-shadow: none; }
+.drop { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 26px 20px; text-align: center; background: var(--bg-muted); border: 1.5px dashed var(--border-strong); transition: border-color 160ms var(--out); }
+.drop:hover { border-color: var(--fg-subtle); }
+.drop b { font-size: 14px; font-weight: 600; margin-top: 6px; }
+.drop span.t { font-size: 12.5px; color: var(--fg-muted); margin-bottom: 8px; }
+.drop__icon { width: 40px; height: 40px; display: grid; place-items: center; background: var(--surface); box-shadow: var(--shadow-1); color: var(--fg-muted); }
+.media { width: 100%; max-width: 260px; background: var(--surface); box-shadow: var(--shadow-1); padding: 8px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow 180ms var(--out); }
+.media:hover { box-shadow: var(--shadow-2); }
+.media__img { position: relative; aspect-ratio: 4 / 3; max-width: 100%; background: var(--t-subtle); display: grid; place-items: center; overflow: hidden; }
+.media__img svg { width: 62%; height: 62%; }
+.media__img .badge { position: absolute; top: 8px; left: 8px; }
+.media__fav { position: absolute; top: 6px; right: 6px; }
+.media__body { padding: 0 6px 6px; display: flex; flex-direction: column; gap: 2px; }
+.media__title { font-size: 14px; font-weight: 600; line-height: 20px; }
+.media__meta { font-size: 12.5px; color: var(--fg-muted); }
+.media__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.media__price { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.or { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--fg-subtle); width: 100%; }
+.or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; width: 100%; }
+@media (max-width: 700px) { .topbar__nav { display: none; } .alert { grid-template-columns: 20px minmax(0, 1fr); } .alert__act { grid-column: 2; grid-row: auto; } }
+
 /* foundations */
 .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; width: 100%; }
 .sw { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
@@ -495,7 +615,7 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 
 @media (max-width: 860px) {
   .app { grid-template-columns: minmax(0, 1fr); }
-  .menu-btn { display: inline-flex; }
+  .bar .menu-btn { display: inline-flex; }
   .side { position: fixed; z-index: 35; top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); left: 0; bottom: 0; width: min(300px, 86vw); height: auto; background: var(--bg); box-shadow: var(--shadow-3); transform: translateX(-104%); transition: transform 360ms var(--ease); }
   .side.is-open { transform: none; }
   .main { padding-left: max(16px, env(safe-area-inset-left, 0px)); }
@@ -541,6 +661,19 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4v4M9 14h.01M15 14h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="17" cy="20" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="19" cy="12" r="1.7" fill="currentColor"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" fill="currentColor"/></symbol>
 </svg>
 
 <header class="bar">
@@ -575,11 +708,11 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
   const store = { get(k) { try { return localStorage.getItem('lumen-v2-' + k); } catch { return null; } }, set(k, v) { try { localStorage.setItem('lumen-v2-' + k, v); } catch {} } };
   const TONES = ['grey', 'blue', 'amber', 'green', 'red', 'violet'];
   const STATUS = {
-    queued: { tone: 'grey', icon: 'dash', label: 'Queued' },
-    running: { tone: 'blue', icon: 'run', label: 'Running' },
-    waiting: { tone: 'amber', icon: 'warn', label: 'Needs you' },
-    done: { tone: 'green', icon: 'check', label: 'Done' },
-    failed: { tone: 'red', icon: 'x', label: 'Failed' },
+    queued: { tone: 'grey', icon: 'dash', label: 'Pending' },
+    running: { tone: 'blue', icon: 'run', label: 'Active' },
+    waiting: { tone: 'amber', icon: 'warn', label: 'Attention' },
+    done: { tone: 'green', icon: 'check', label: 'Success' },
+    failed: { tone: 'red', icon: 'x', label: 'Error' },
   };
 
   /* ---------- unit renderers: each takes args, returns markup ---------- */
@@ -622,6 +755,9 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
     surface: (a = {}) => `<div class="surface surface--${a.level ?? 'card'} r-${a.radius ?? 'card'}${a.tone ? ' t-' + a.tone : ''}" style="width:100%;max-width:${a.width ?? 320}px">${a.content ?? `<h3>${esc(a.title ?? 'Surface')}</h3><p class="desc">${esc(a.desc ?? 'Holds one object.')}</p>`}</div>`,
     tooltip: (a = {}) => `<span class="tooltip"><span class="tooltip__bubble r-chip">${esc(a.text ?? 'Copy link')}${a.kbd ? `<span class="kbd">${esc(a.kbd)}</span>` : ''}</span>${a.anchor ?? U.button({ variant: 'plain', iconOnly: true, icon: 'copy', label: 'Copy' })}</span>`,
     skeleton: (a = {}) => `<div class="stack" style="width:100%;max-width:${a.width ?? 320}px;gap:10px">${Array.from({ length: a.lines ?? 3 }, (_, i) => `<span class="skel" style="width:${[100, 86, 64, 92, 72][i % 5]}%"></span>`).join('')}</div>`,
+    select: (a = {}) => { const o = (a.options ?? 'Newest first,Price: low to high,Price: high to low').split(',').map((s) => s.trim()).filter(Boolean); return `<div class="select" style="max-width:${a.width ?? 260}px"><select class="r-ctl" aria-label="${esc(a.label ?? 'Select')}"${a.disabled ? ' disabled' : ''}>${o.map((x, i) => `<option${i === (a.selected ?? 0) ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select></div>`; },
+    slider: (a = {}) => { const min = a.min ?? 0, max = a.max ?? 100, v = a.value ?? 60; return `<div class="slider"><div class="slider__meta"><span>${esc(a.label ?? 'Volume')}</span><span class="num muted" data-out>${v}${esc(a.unit ?? '%')}</span></div><input type="range" min="${min}" max="${max}" value="${v}" data-unit="${esc(a.unit ?? '%')}" style="--p:${(v - min) / ((max - min) || 1) * 100}%" aria-label="${esc(a.label ?? 'Volume')}"></div>`; },
+    link: (a = {}) => `<a class="link" href="#x" data-nav>${esc(a.label ?? 'Read the guide')}</a>`,
   };
 
   /* ---------- compositions: built only from units above ---------- */
@@ -682,6 +818,32 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       <g class="node is-gate"><rect x="520" y="220" width="170" height="60" rx="14"/><text class="k" x="536" y="243">GATE</text><text class="t" x="536" y="263">Review gate</text></g>
       <g class="node"><rect x="784" y="220" width="160" height="60" rx="14"/><text class="k" x="800" y="243">STORE</text><text class="t" x="800" y="263">Pull request</text></g>
     </svg></div>`,
+    alert: (a = {}) => { const k = { info: ['blue', 'info'], success: ['green', 'check'], warning: ['amber', 'warn'], danger: ['red', 'x'] }[a.tone ?? 'info']; return `<div class="alert r-row t-${k[0]}" role="${a.tone === 'danger' ? 'alert' : 'status'}">${icon(k[1])}<div class="alert__title">${esc(a.title ?? 'A new version is available')}</div>${a.text !== '' ? `<div class="alert__text">${esc(a.text ?? 'Reload to get version 2.4 with faster search.')}</div>` : ''}${a.action ? `<div class="alert__act">${U.button({ variant: 'plain', size: 'sm', label: a.action })}</div>` : ''}</div>`; },
+    accordion: (a = {}) => { const items = a.items ?? [['How long does delivery take?', 'Orders ship in 1 to 2 working days. Delivery takes 2 to 4 days in most cities.'], ['Can I return an item?', 'Yes. Return any item within 30 days. Refunds arrive within 5 working days.'], ['Do you ship abroad?', 'We ship to 32 countries. The checkout page shows the cost for your address.']]; const open = a.open ?? 0; return `<div class="acc r-card">${items.map(([q, t], i) => `<div class="acc__item${i === open ? ' is-open' : ''}"><button class="acc__head" aria-expanded="${i === open}">${esc(q)}${icon('chev')}</button><div class="acc__body"><div><p>${esc(t)}</p></div></div></div>`).join('')}</div>`; },
+    dialog: (a = {}) => `<div class="overlay-stage r-card"><div class="dialog r-panel" role="dialog" aria-label="${esc(a.title ?? 'Dialog')}"><div class="dialog__head"><h3>${esc(a.title ?? 'Delete this project?')}</h3><p>${esc(a.desc ?? 'This removes 24 files and 3 members. You cannot undo it.')}</p></div>${a.confirmField ? C.field({ label: 'Type the project name to confirm', placeholder: 'acme-web' }) : ''}<div class="dialog__foot">${U.button({ variant: 'plain', label: a.cancel ?? 'Cancel' })}${U.button({ variant: a.danger === false ? 'ink' : 'danger', label: a.confirm ?? 'Delete project' })}</div></div></div>`,
+    labeled: (label, control) => `<div class="field" style="max-width:none"><label>${esc(label)}</label>${control}</div>`,
+    sheet: (a = {}) => `<div class="drawer-stage r-card"><aside class="drawer r-panel" role="dialog" aria-label="${esc(a.title ?? 'Filters')}"><div class="drawer__head"><div><h3>${esc(a.title ?? 'Filters')}</h3><p>${esc(a.desc ?? 'Narrow the list of products.')}</p></div>${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'x', label: 'Close' })}</div><div class="stack" style="gap:16px">${C.labeled('Sort by', U.select({ width: 999 }))}${U.slider({ label: 'Max price ($)', value: 120, max: 300, unit: '' })}${U.checkbox({ label: 'In stock only', checked: true })}${U.checkbox({ label: 'Free delivery' })}</div><div class="drawer__foot">${U.button({ variant: 'plain', label: 'Reset' })}${U.button({ label: 'Show 24 results' })}</div></aside></div>`,
+    popover: (a = {}) => `<div class="pop-wrap">${U.button({ variant: 'plain', icon: 'user', label: a.trigger ?? 'Share' })}<div class="popover r-card" role="dialog"><div><h4>${esc(a.title ?? 'Share this page')}</h4><p>${esc(a.desc ?? 'Anyone with the link can view.')}</p></div><div class="row" style="flex-wrap:nowrap;gap:6px">${U.input({ value: 'lumen.app/p/8f2k', size: 'sm', width: 999 })}${U.button({ variant: 'plain', size: 'sm', icon: 'copy', label: 'Copy' })}</div>${U.switch({ label: 'Allow comments', checked: true })}</div></div>`,
+    menuItem: (ic, label, kbd, danger, active) => `<button class="menu__item r-row${danger ? ' is-danger' : ''}${active ? ' is-active' : ''}" role="menuitem">${icon(ic)}${esc(label)}${kbd ? `<span class="kbd">${esc(kbd)}</span>` : ''}</button>`,
+    menu: (a = {}) => `<div class="pop-wrap">${U.button({ variant: 'plain', iconOnly: true, icon: 'more', label: 'More actions' })}<div class="menu r-card" role="menu">${a.label !== '' ? `<div class="menu__label">${esc(a.label ?? 'Project')}</div>` : ''}${C.menuItem('edit', 'Rename', 'R')}${C.menuItem('copy', 'Duplicate', 'D')}${C.menuItem('user', 'Invite people', 'I')}${a.danger !== false ? `<hr class="sep">${C.menuItem('trash', 'Delete', '⌫', true)}` : ''}</div></div>`,
+    command: () => `<div class="cmd r-panel" role="dialog" aria-label="Command menu"><div class="cmd__search">${icon('search')}<input placeholder="Type a command or search…" aria-label="Command"></div><div class="cmd__list" role="listbox"><div class="menu__label">Suggestions</div>${C.menuItem('plus', 'New project', 'N', false, true)}${C.menuItem('file', 'Open file…', 'O')}${C.menuItem('gear', 'Settings', ',')}<div class="menu__label">Pages</div>${C.menuItem('home', 'Home')}${C.menuItem('cart', 'Orders')}${C.menuItem('bell', 'Notifications')}</div><div class="cmd__foot"><span>${U.kbd({ key: '↑↓' })} move</span><span>${U.kbd({ key: '↵' })} open</span><span>${U.kbd({ key: 'esc' })} close</span></div></div>`,
+    breadcrumb: (a = {}) => { const parts = (a.path ?? 'Home,Shop,Lamps,Arc floor lamp').split(',').map((s) => s.trim()); return `<nav class="bc" aria-label="Breadcrumb">${parts.map((p, i) => i === parts.length - 1 ? `<span aria-current="page">${esc(p)}</span>` : `<a href="#x" data-nav>${esc(p)}</a>${icon('right')}`).join('')}</nav>`; },
+    pagination: (a = {}) => { const n = a.pages ?? 12, cur = Math.min(a.current ?? 3, n); const show = [...new Set([1, cur - 1, cur, cur + 1, n])].filter((p) => p >= 1 && p <= n).sort((x, y) => x - y); let prev = 0, html = ''; for (const p of show) { if (p - prev > 1) html += '<span class="gap">…</span>'; html += U.button({ variant: 'quiet', size: 'sm', label: String(p) }).replace('<button', `<button data-page="${p}"${p === cur ? ' aria-current="page"' : ''}`); prev = p; } return `<nav class="pager" aria-label="Pagination">${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'left', label: 'Previous' })}${html}${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'right', label: 'Next' })}</nav>`; },
+    topbar: (a = {}) => { const nav = (a.nav ?? 'Overview,Projects,Team,Billing').split(',').map((s) => s.trim()); return `<header class="topbar r-card"><div class="topbar__brand"><span class="brand__mark"><i></i></span>${esc(a.brand ?? 'Acme')}</div><nav class="topbar__nav">${nav.map((n, i) => `<a class="r-ctl" href="#x" data-nav${i === 0 ? ' aria-current="page"' : ''}>${esc(n)}</a>`).join('')}</nav><div class="topbar__end">${a.search !== false ? U.button({ variant: 'quiet', iconOnly: true, icon: 'search', label: 'Search' }) : ''}${U.button({ variant: 'quiet', iconOnly: true, icon: a.cart ? 'cart' : 'bell', label: a.cart ? 'Cart' : 'Notifications' })}${U.avatar({ name: 'Lam Tran', size: 'sm' })}</div></header>`; },
+    navSidebar: (a = {}) => { const items = [['home', 'Home', ''], ['inbox', 'Inbox', '12'], ['chart', 'Reports', ''], ['cart', 'Orders', '3'], ['user', 'Customers', '']]; const cur = a.current ?? 0; return `<nav class="navside surface--frame r-panel">${items.map(([ic, l, c], i) => `<a class="r-row" href="#x" data-nav${i === cur ? ' aria-current="page"' : ''}>${icon(ic)}${l}${c ? `<span class="cnt">${c}</span>` : ''}</a>`).join('')}<div class="navside__label">Workspace</div><a class="r-row" href="#x" data-nav>${icon('gear')}Settings</a><a class="r-row" href="#x" data-nav>${icon('lock')}Security</a></nav>`; },
+    dl: (a = {}) => `<dl class="dl r-card">${(a.rows ?? [['Order', '<span class="mono">#40-2219</span>'], ['Status', U.status({ status: 'running', label: 'Shipped' })], ['Customer', `<span class="row" style="gap:8px">${U.avatar({ name: 'Mai Pham', size: 'sm', tone: 'amber' })}Mai Pham</span>`], ['Total', '<span class="num">$248.00</span>'], ['Placed', 'Nov 1, 2026 · 09:41']]).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>`,
+    calendar: (a = {}) => {
+      const y = a.year ?? 2026, m = a.month ?? 10, sel = a.selected ?? 12, today = a.today ?? 1;
+      const first = new Date(y, m, 1), lead = (first.getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate(), prevDays = new Date(y, m, 0).getDate();
+      const cells = [];
+      for (let i = lead; i > 0; i--) cells.push(`<button class="cal__day is-out" tabindex="-1">${prevDays - i + 1}</button>`);
+      for (let d = 1; d <= days; d++) cells.push(`<button class="cal__day${d === today ? ' is-today' : ''}" aria-pressed="${d === sel}" data-day>${d}</button>`);
+      while (cells.length % 7) cells.push(`<button class="cal__day is-out" tabindex="-1">${cells.length - lead - days + 1}</button>`);
+      return `<div class="cal r-card"><div class="cal__head">${first.toLocaleString('en-US', { month: 'long', year: 'numeric' })}<span class="row" style="gap:2px">${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'left', label: 'Previous month' })}${U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'right', label: 'Next month' })}</span></div><div class="cal__grid">${['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => `<span class="cal__dow">${d}</span>`).join('')}${cells.join('')}</div></div>`;
+    },
+    fileDrop: (a = {}) => `<div class="stack" style="width:100%;max-width:440px;gap:8px"><div class="drop r-card"><span class="drop__icon r-item">${icon('upload')}</span><b>${esc(a.title ?? 'Drop files here')}</b><span class="t">${esc(a.hint ?? 'PNG, JPG or PDF, up to 10 MB each')}</span>${U.button({ variant: 'plain', size: 'sm', label: 'Choose files' })}</div>${a.files !== false ? C.list([C.listRow({ lead: 'icon', icon: 'file', title: 'invoice-october.pdf', meta: '1.2 MB · uploaded', end: U.button({ variant: 'quiet', size: 'sm', iconOnly: true, icon: 'x', label: 'Remove' }), interactive: false }), C.listRow({ lead: 'icon', icon: 'file', title: 'photo-0412.jpg', meta: '4.8 MB · 62%', end: U.spinner({}), interactive: false })]) : ''}</div>`,
+    mediaArt: (tone) => `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="52" width="64" height="30" rx="12" fill="var(--t)" opacity=".9"/><circle cx="50" cy="34" r="20" fill="var(--t)" opacity=".55"/><rect x="44" y="82" width="12" height="10" rx="3" fill="var(--t)" opacity=".7"/></svg>`,
+    media: (a = {}) => `<article class="media r-card t-${a.tone ?? 'blue'}"><div class="media__img r-item">${C.mediaArt()}${a.badge ? U.badge({ tone: a.badgeTone ?? 'green', label: a.badge }) : ''}<span class="media__fav">${U.button({ variant: 'plain', size: 'sm', iconOnly: true, icon: 'heart', label: 'Save' })}</span></div><div class="media__body"><div class="media__title">${esc(a.title ?? 'Arc floor lamp')}</div><div class="media__meta">${esc(a.meta ?? 'Brushed steel · 3 colors')}</div><div class="media__foot"><span class="media__price">${esc(a.price ?? '$149')}</span>${U.button({ variant: a.cta === 'plain' ? 'plain' : 'ink', size: 'sm', icon: 'plus', label: a.ctaLabel ?? 'Add' })}</div></div></article>`,
   };
 
   /* ---------- registry: one entry per page ---------- */
@@ -725,9 +887,9 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       ] },
     { id: 'kbd', name: 'Kbd', level: 'unit', group: 'Actions', summary: 'Shows a keyboard key or shortcut.', props: [P('key', 'Key text', txt('⌘K'))], render: U.kbd,
       stories: [['Inside a button', 'The key takes the button text color.', () => `<div class="row">${U.button({ label: 'Approve', kbd: 'A' })}${U.button({ variant: 'plain', label: 'Search', kbd: '/' })}</div>`]] },
-    { id: 'badge', name: 'Badge', level: 'unit', group: 'Display', summary: 'Labels a state or a kind with a short word. Color always comes with a word.',
+    { id: 'badge', name: 'Badge', level: 'unit', group: 'Display', summary: 'Labels a state or a category with a short word. Color always comes with a word.',
       props: [P('tone', 'Meaning of the color', sel(TONES, 'blue')), P('label', 'One or two words', txt('Running')), P('dot', 'Leading dot', bool(true))], render: U.badge,
-      stories: [['Tones', 'grey: neutral · blue: running · amber: needs you · green: done · red: failed · violet: planning', () => `<div class="row">${TONES.map((t) => U.badge({ tone: t, dot: true, label: { grey: 'Draft', blue: 'Running', amber: 'Needs you', green: 'Done', red: 'Failed', violet: 'Planning' }[t] })).join('')}</div>`],
+      stories: [['Tones', 'grey: neutral · blue: accent, info, active · amber: warning · green: success · red: danger · violet: extra category', () => `<div class="row">${TONES.map((t) => U.badge({ tone: t, dot: true, label: { grey: 'Draft', blue: 'Active', amber: 'Pending', green: 'Paid', red: 'Overdue', violet: 'Beta' }[t] })).join('')}</div>`],
         ['Status badge', 'A status badge adds the status icon.', () => `<div class="row">${Object.keys(STATUS).map((s) => U.status({ status: s })).join('')}</div>`]] },
     { id: 'tag', name: 'Tag', level: 'unit', group: 'Display', summary: 'Marks a category, a file or a value. A tag carries no state.',
       props: [P('kind', 'line: removable context · soft: category · mono: IDs and sizes', sel(['line', 'soft', 'mono'], 'line')), P('label', 'Text', txt('story-ui'))], render: U.tag,
@@ -766,6 +928,11 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       stories: [['Levels', 'Each level has one job. Do not put a card shadow on a frame.', () => `<div class="row" style="justify-content:center">${['frame', 'card', 'raised', 'float', 'well'].map((l) => U.surface({ level: l, title: l[0].toUpperCase() + l.slice(1), desc: { frame: 'flat, hairline', card: 'shadow 1', raised: 'shadow 2', float: 'shadow 3', well: 'recessed' }[l], width: 150 })).join('')}</div>`]] },
     { id: 'tooltip', name: 'Tooltip', level: 'unit', group: 'Overlay', summary: 'Names an icon button or shows its shortcut. Solid ink, no glass.', props: [P('text', '', txt('Copy link')), P('kbd', '', txt('⌘C'))], render: U.tooltip, stories: [] },
     { id: 'skeleton', name: 'Skeleton', level: 'unit', group: 'Feedback', summary: 'Holds the shape of content while it loads.', props: [P('lines', '', num(1, 6, 3))], render: U.skeleton, stories: [] },
+    { id: 'select', name: 'Select', level: 'unit', group: 'Forms', summary: 'Picks one value from a list of 4 or more. Use SegmentedControl for 2 to 4 visible choices.',
+      props: [P('options', 'Comma-separated', txt('Newest first,Price: low to high,Price: high to low')), P('selected', 'Index', num(0, 4, 0)), P('disabled', '', bool(false))], render: U.select, stories: [] },
+    { id: 'slider', name: 'Slider', level: 'unit', group: 'Forms', summary: 'Sets a value in a range by dragging. Show the value next to the label.',
+      props: [P('label', '', txt('Volume')), P('value', '', num(0, 100, 60)), P('unit', '', txt('%'))], render: U.slider, stories: [] },
+    { id: 'link', name: 'Link', level: 'unit', group: 'Navigation', summary: 'Moves to another page or place. Use a button for an action.', props: [P('label', '', txt('Read the guide'))], render: (a) => `<p style="margin:0;font-size:14.5px;max-width:420px">Lumen uses one accent for links. ${U.link(a)} to learn more.</p>`, stories: [] },
 
     /* compositions */
     { id: 'field', name: 'Field', level: 'composition', group: 'Forms', uses: ['input'], summary: 'A labeled input with a hint or an error.',
@@ -807,7 +974,7 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       render: (a) => C.timeline({ steps: runSteps.map((s, i) => ({ ...s, status: i < a.runningStep ? 'done' : i === a.runningStep ? 'running' : 'queued', meta: i < a.runningStep ? 'done' : undefined })) }), stories: [] },
     { id: 'prompt', name: 'PromptInput', level: 'composition', group: 'Conversation', uses: ['textarea', 'tag', 'button', 'surface'], summary: 'The message box. Enter sends; Shift+Enter adds a line.',
       props: [P('placeholder', '', txt('Ask anything…')), P('busy', 'Send becomes Stop', bool(false))], render: C.prompt, stories: [] },
-    { id: 'callout', name: 'Callout', level: 'composition', group: 'Content', uses: ['surface'], summary: 'A short side note: In short, Good to know or Watch out. Three or fewer for each page.',
+    { id: 'callout', name: 'Callout', level: 'composition', group: 'Content', uses: ['surface'], summary: 'A side note inside long-form text: In short, Good to know or Watch out. Use Alert for system messages.',
       props: [P('kind', '', sel(['in-short', 'good-to-know', 'watch-out'], 'in-short')), P('text', '', txt('Metrics count events. Traces show the path of one request.'))], render: C.callout,
       stories: [['All kinds', '', () => `<div class="stack" style="width:100%;align-items:center">${C.callout({ kind: 'in-short' })}${C.callout({ kind: 'good-to-know', text: 'At 400 spans per second, the queue holds about 5 seconds of spans.' })}${C.callout({ kind: 'watch-out', text: 'A label with user IDs creates one time series for each user.' })}</div>`]] },
     { id: 'code', name: 'CodeBlock', level: 'composition', group: 'Content', uses: ['surface', 'button'], summary: 'A code sample in a recessed well with a copy button.', props: [P('file', '', txt('otel.config.ts'))], render: C.code, stories: [] },
@@ -819,19 +986,51 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       props: [P('kind', '', sel(['line', 'bar'], 'line')), P('title', '', txt('Latency by service (ms)')), P('series', 'Line series, 1–5', num(1, 5, 3)), P('range', '', bool(true))], render: C.chartCard,
       stories: [['Bar', '', () => C.chartCard({ kind: 'bar', title: 'Items closed per day', range: false })]] },
     { id: 'diagram', name: 'Diagram', level: 'composition', group: 'Data viz', uses: ['surface'], summary: 'Nodes in dashed zones. One inverted node marks "now"; moving dashes mark live work.', props: [], render: C.diagram, stories: [] },
+    { id: 'alert', name: 'Alert', level: 'composition', group: 'Feedback', uses: ['surface', 'button'], summary: 'A message about the page or the system, with an optional action.',
+      props: [P('tone', '', sel(['info', 'success', 'warning', 'danger'], 'info')), P('title', '', txt('A new version is available')), P('text', '', txt('Reload to get version 2.4 with faster search.')), P('action', '', txt('Reload'))], render: C.alert,
+      stories: [['Tones', 'Each tone has its own icon, so the meaning never rests on color.', () => `<div class="stack" style="width:100%;align-items:center">${C.alert({ tone: 'info' })}${C.alert({ tone: 'success', title: 'Payment received', text: 'We sent the receipt to mai@acme.com.' })}${C.alert({ tone: 'warning', title: 'Your trial ends in 3 days', text: '', action: 'Upgrade' })}${C.alert({ tone: 'danger', title: 'The card was declined', text: 'Use another card or contact your bank.', action: 'Update card' })}</div>`]] },
+    { id: 'accordion', name: 'Accordion', level: 'composition', group: 'Data display', uses: ['surface', 'separator'], summary: 'Stacks sections that open one at a time. Use it for FAQs and long settings.',
+      props: [P('open', 'Index of the open item', num(0, 2, 0))], render: C.accordion, stories: [] },
+    { id: 'dialog', name: 'Dialog', level: 'composition', group: 'Overlay', uses: ['surface', 'button', 'field'], summary: 'Asks for one decision and blocks the page until the person answers.',
+      props: [P('title', '', txt('Delete this project?')), P('desc', '', txt('This removes 24 files and 3 members. You cannot undo it.')), P('confirm', '', txt('Delete project')), P('danger', 'Destructive confirm', bool(true)), P('confirmField', 'Ask to type the name', bool(false))], render: C.dialog, stories: [] },
+    { id: 'sheet', name: 'Sheet', level: 'composition', group: 'Overlay', uses: ['surface', 'button', 'select', 'slider', 'checkbox'], summary: 'A side panel for filters, details or a form, without leaving the page.',
+      props: [P('title', '', txt('Filters')), P('desc', '', txt('Narrow the list of products.'))], render: C.sheet, stories: [] },
+    { id: 'popover', name: 'Popover', level: 'composition', group: 'Overlay', uses: ['surface', 'button', 'input', 'switch'], summary: 'A small floating panel next to its trigger. It closes on outside click.',
+      props: [P('trigger', '', txt('Share')), P('title', '', txt('Share this page')), P('desc', '', txt('Anyone with the link can view.'))], render: C.popover, stories: [] },
+    { id: 'menu', name: 'Menu', level: 'composition', group: 'Overlay', uses: ['surface', 'button', 'kbd', 'separator'], summary: 'A list of actions behind one button. Put a destructive action last, after a separator.',
+      props: [P('label', 'Group label', txt('Project')), P('danger', 'Show Delete', bool(true))], render: C.menu, stories: [] },
+    { id: 'command', name: 'CommandPalette', level: 'composition', group: 'Navigation', uses: ['surface', 'input', 'kbd'], summary: 'Finds a page or runs an action from the keyboard. Opens with ⌘K.', props: [], render: C.command, stories: [] },
+    { id: 'breadcrumb', name: 'Breadcrumb', level: 'composition', group: 'Navigation', uses: ['link'], summary: 'Shows where the page sits and links to each parent.', props: [P('path', 'Comma-separated', txt('Home,Shop,Lamps,Arc floor lamp'))], render: C.breadcrumb, stories: [] },
+    { id: 'pagination', name: 'Pagination', level: 'composition', group: 'Navigation', uses: ['button'], summary: 'Moves between pages of a long list. The current page is a lifted chip.',
+      props: [P('pages', '', num(1, 30, 12)), P('current', '', num(1, 30, 3))], render: C.pagination, stories: [] },
+    { id: 'topbar', name: 'TopBar', level: 'composition', group: 'Navigation', uses: ['button', 'avatar', 'link'], summary: 'The app header: brand, main sections and account actions.',
+      props: [P('brand', '', txt('Acme')), P('nav', 'Comma-separated', txt('Overview,Projects,Team,Billing')), P('cart', 'Shop mode', bool(false)), P('search', '', bool(true))], render: C.topbar, stories: [] },
+    { id: 'nav-sidebar', name: 'NavSidebar', level: 'composition', group: 'Navigation', uses: ['link', 'surface'], summary: 'Side navigation on the ground. The current page is a white chip; counts sit on the right.',
+      props: [P('current', 'Index', num(0, 4, 0))], render: C.navSidebar, stories: [] },
+    { id: 'dl', name: 'DescriptionList', level: 'composition', group: 'Data display', uses: ['surface', 'badge', 'avatar'], summary: 'Label and value pairs for one record: an order, a profile, a file.', props: [], render: C.dl, stories: [] },
+    { id: 'calendar', name: 'Calendar', level: 'composition', group: 'Forms', uses: ['button', 'surface'], summary: 'Picks a date. Today has a ring; the selected day is ink.',
+      props: [P('selected', 'Day', num(1, 30, 12)), P('month', '0 = January', num(0, 11, 10))], render: C.calendar, stories: [] },
+    { id: 'file-drop', name: 'FileDrop', level: 'composition', group: 'Forms', uses: ['surface', 'button', 'list-row', 'spinner'], summary: 'Takes files by drag and drop or by a file picker, then lists them with their state.',
+      props: [P('title', '', txt('Drop files here')), P('hint', '', txt('PNG, JPG or PDF, up to 10 MB each')), P('files', 'Show the file list', bool(true))], render: C.fileDrop, stories: [] },
+    { id: 'media', name: 'MediaCard', level: 'composition', group: 'Data display', uses: ['surface', 'badge', 'button'], summary: 'An image with a title, a meta line and one action. Use it for products, posts and files.',
+      props: [P('title', '', txt('Arc floor lamp')), P('meta', '', txt('Brushed steel · 3 colors')), P('price', '', txt('$149')), P('tone', 'Placeholder tint', sel(TONES, 'blue')), P('badge', '', txt('New'))], render: C.media,
+      stories: [['Grid', '', () => `<div class="grid-auto" style="max-width:840px">${C.media({ tone: 'blue', badge: 'New' })}${C.media({ tone: 'amber', title: 'Linen cushion', meta: 'Sand · 45 × 45 cm', price: '$39' })}${C.media({ tone: 'green', title: 'Desk planter', meta: 'Ceramic · 2 sizes', price: '$24', badge: '−20%', badgeTone: 'red' })}</div>`]] },
   ];
 
   const EXAMPLES = [
+    { id: 'ex-settings', name: 'Settings', summary: 'TopBar + NavSidebar + Field + Select + Switch + Slider + Alert + Dialog trigger.', render: () => `<div class="stack" style="gap:14px">${C.topbar({})}<div class="row" style="align-items:flex-start;gap:14px">${C.navSidebar({ current: -1 }).replace('Settings</a>', 'Settings</a>').replace('href="#x" data-nav>' + icon('gear'), 'href="#x" data-nav aria-current="page">' + icon('gear'))}<div class="stack" style="flex:1 1 380px;gap:14px">${C.alert({ tone: 'warning', title: 'Verify your email', text: 'We sent a link to lam@acme.com.', action: 'Resend' })}<section class="surface r-card stack" style="max-width:none;gap:16px"><div><h3>Profile</h3><p class="desc">Shown on invoices and shared pages.</p></div><div class="row" style="align-items:flex-start;gap:14px">${C.field({ label: 'Full name', value: 'Lam Tran' })}${C.field({ label: 'Email', value: 'lam@acme.com' })}</div>${C.labeled('Language', U.select({ options: 'English,Tiếng Việt,日本語', width: 360 }))}<div class="row" style="justify-content:flex-end">${U.button({ variant: 'plain', label: 'Cancel' })}${U.button({ label: 'Save changes' })}</div></section><section class="surface r-card stack" style="max-width:none;gap:16px"><h3>Notifications</h3>${U.switch({ label: 'Email me a weekly summary', desc: 'Every Monday at 08:00.', checked: true })}${U.switch({ label: 'Push notifications', desc: 'Mentions and replies only.' })}${U.slider({ label: 'Quiet hours start', value: 22, min: 18, max: 24, unit: ':00' })}</section><section class="surface r-card row" style="max-width:none;justify-content:space-between"><div><h3>Delete account</h3><p class="desc">Removes your data after 30 days.</p></div>${U.button({ variant: 'danger', label: 'Delete account' })}</section></div></div></div>` },
+    { id: 'ex-signin', name: 'Sign in', summary: 'Surface + Field + Checkbox + Button + Link.', render: () => `<div style="display:grid;place-items:center;padding:24px 0"><div class="surface r-panel stack" style="max-width:380px;padding:28px;gap:16px"><span class="brand__mark" style="width:32px;height:32px;border-radius:10px"><i></i></span><div><h3 style="font-size:20px;line-height:28px">Sign in to Acme</h3><p class="desc">Welcome back. Use your work email.</p></div>${C.field({ label: 'Email', placeholder: 'you@company.com' })}${C.field({ label: 'Password', placeholder: '••••••••', hint: '' })}<div class="row" style="justify-content:space-between">${U.checkbox({ label: 'Keep me signed in', checked: true })}${U.link({ label: 'Forgot password?' })}</div>${U.button({ size: 'lg', label: 'Sign in' }).replace('class="', 'style="width:100%" class="')}<div class="or">or</div>${U.button({ variant: 'plain', size: 'lg', icon: 'lock', label: 'Continue with SSO' }).replace('class="', 'style="width:100%" class="')}<p class="desc" style="text-align:center;margin:0">No account? ${U.link({ label: 'Create one' })}</p></div></div>` },
+    { id: 'ex-shop', name: 'Shop', summary: 'TopBar + Breadcrumb + Select + SegmentedControl + MediaCard + Pagination.', render: () => `<div class="stack" style="gap:16px">${C.topbar({ brand: 'Nook', nav: 'Living,Lighting,Kitchen,Outdoor', cart: true })}${C.breadcrumb({ path: 'Home,Lighting,Floor lamps' })}<div class="row" style="justify-content:space-between"><h2 style="margin:0;font-size:22px;letter-spacing:-.02em">Floor lamps <span class="muted" style="font-size:14px;font-weight:400">24 products</span></h2><div class="row">${U.segmented({ options: 'All,In stock,On sale', size: 'sm' })}${U.select({ width: 200 })}</div></div><div class="grid-auto">${C.media({ tone: 'blue', badge: 'New' })}${C.media({ tone: 'amber', title: 'Paper globe lamp', meta: 'Rice paper · 2 sizes', price: '$89' })}${C.media({ tone: 'green', title: 'Tripod lamp', meta: 'Oak · linen shade', price: '$179', badge: '−20%', badgeTone: 'red' })}${C.media({ tone: 'violet', title: 'Reading lamp', meta: 'Matte black · dimmable', price: '$119' })}</div><div class="row" style="justify-content:center">${C.pagination({ pages: 3, current: 1 })}</div></div>` },
     { id: 'ex-board', name: 'Board', summary: 'StageBar + Column + ItemCard + ActionCard + Toast.', render: () => `<div class="stack" style="gap:14px">${C.stages({ stages: [{ label: 'Todo', count: 1, meta: '2 pt', tone: 'grey' }, { label: 'Running', count: 2, meta: '9 pt', tone: 'blue', alert: true }, { label: 'Review', count: 1, meta: '2 pt', tone: 'amber' }, { label: 'Done', count: 1, meta: '4 pt', tone: 'green' }] })}<div class="columns" style="--cols:4">${C.column({ title: 'Todo', tone: 'grey', cards: [sampleCards.e] })}${C.column({ title: 'Running', tone: 'blue', limit: 3, cards: [sampleCards.b, sampleCards.c] })}${C.column({ title: 'Review', tone: 'amber', cards: [sampleCards.a] })}${C.column({ title: 'Done', tone: 'green', cards: [sampleCards.d] })}</div><div class="row" style="align-items:flex-start">${C.groupPanel({ title: 'Waiting for you', meta: '1 open', content: C.action({ kind: 'Approve', ref: 'ITEM-44', title: 'Approve the plan: copy a reference with one click', desc: '3 criteria in 1 slice.' }) })}${C.toast({ text: 'ITEM-30 merged.' })}</div></div>` },
     { id: 'ex-run', name: 'Agent run', summary: 'Message + Disclosure + Timeline + PromptInput.', render: () => `<div class="row" style="align-items:flex-start;gap:16px"><div class="stack" style="flex:1 1 360px;gap:16px">${C.message({ author: 'You', align: 'end', bubble: true, text: 'Why did the ingest job fail last night?' })}${C.message({ author: 'Ops agent', html: `<p>The job hit the 512 MB memory limit at 02:14. The batch holds 50,000 rows at peak.</p><div class="stack" style="gap:8px">${C.disclosure({ status: 'done', open: true, meta: 'src/ingest/worker.ts' })}${C.disclosure({ status: 'failed', name: 'deploy', meta: '--env staging', end: '14 s', body: 'approval required for env=staging' })}</div>` })}${C.event({})}${C.prompt({ placeholder: 'Reply to Ops agent…' })}</div><div class="surface r-card" style="flex:1 1 280px"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h3>Run #318</h3>${U.button({ variant: 'danger', size: 'sm', icon: 'stop', label: 'Stop' })}</div>${C.timeline({ steps: runSteps })}</div></div>` },
-    { id: 'ex-guide', name: 'Guide page', summary: 'Callout + CodeBlock + DataTable on a reading column.', render: () => `<article class="stack" style="max-width:660px;margin:0 auto;gap:16px"><span class="mono" style="font-size:12px;color:var(--blue-ink)">Chapter 3 · Traces</span><h2 style="margin:0;font-size:28px;line-height:34px;letter-spacing:-.025em">Follow one request through four services</h2><p style="margin:0;font-size:17px;line-height:28px;color:var(--fg-muted)">A trace records the path of one request. Each hop adds a span with a start time, a duration and a status.</p>${C.callout({ kind: 'in-short' })}<p style="margin:0;font-size:15.5px;line-height:26px">The SDK adds a <code class="mono" style="font-size:.88em;padding:1px 6px;border-radius:6px;background:var(--track)">traceparent</code> header to every outgoing call. The next service reads it and continues the trace.</p>${C.code({})}${C.table({ cols: ['Traffic', 'Sample rate', 'Spans kept / s'], rows: [['Below 200 req/s', '100%', '200'], ['200 – 2,000 req/s', '25%', '500'], ['Above 2,000 req/s', '10%', '200+']] })}${C.callout({ kind: 'watch-out', text: 'A label with user IDs creates one time series for each user.' })}</article>` },
+    { id: 'ex-guide', name: 'Article', summary: 'Callout + CodeBlock + DataTable on a reading column.', render: () => `<article class="stack" style="max-width:660px;margin:0 auto;gap:16px"><span class="mono" style="font-size:12px;color:var(--blue-ink)">Chapter 3 · Traces</span><h2 style="margin:0;font-size:28px;line-height:34px;letter-spacing:-.025em">Follow one request through four services</h2><p style="margin:0;font-size:17px;line-height:28px;color:var(--fg-muted)">A trace records the path of one request. Each hop adds a span with a start time, a duration and a status.</p>${C.callout({ kind: 'in-short' })}<p style="margin:0;font-size:15.5px;line-height:26px">The SDK adds a <code class="mono" style="font-size:.88em;padding:1px 6px;border-radius:6px;background:var(--track)">traceparent</code> header to every outgoing call. The next service reads it and continues the trace.</p>${C.code({})}${C.table({ cols: ['Traffic', 'Sample rate', 'Spans kept / s'], rows: [['Below 200 req/s', '100%', '200'], ['200 – 2,000 req/s', '25%', '500'], ['Above 2,000 req/s', '10%', '200+']] })}${C.callout({ kind: 'watch-out', text: 'A label with user IDs creates one time series for each user.' })}</article>` },
     { id: 'ex-dash', name: 'Dashboard', summary: 'StatCard + ChartCard + ListRow + Diagram.', render: () => `<div class="stack" style="gap:14px"><div class="row" style="align-items:stretch">${C.stat({})}${C.stat({ label: 'p95 latency', value: '412', unit: 'ms', delta: 8, goodWhen: 'down', vs: 'vs last week', trend: [380, 360, 390, 400, 410, 405, 412] })}${C.stat({ label: 'Open blockers', value: '3', delta: 0, vs: 'no change', spark: false })}</div><div class="row" style="align-items:stretch">${C.chartCard({ title: 'Latency by service (ms)' })}${C.list([C.listRow({ lead: 'dot', tone: 'blue', pulse: true, title: 'Nightly ingest', meta: 'running · 14 min', end: U.button({ variant: 'plain', size: 'sm', label: 'Open' }) }), C.listRow({ lead: 'dot', tone: 'red', title: 'Deploy to staging', meta: 'failed · approval required', end: U.button({ variant: 'ink', size: 'sm', label: 'Approve' }) }), C.listRow({ lead: 'dot', tone: 'green', title: 'Weekly report', meta: 'done · 4 min ago', end: '' })])}</div>${C.diagram()}</div>` },
   ];
 
   const FOUNDATIONS = [
-    { id: 'colors', name: 'Color', summary: 'Cool neutrals with a hint of blue. Ink is the main action. A hue appears only when it means a state.', render: () => {
+    { id: 'colors', name: 'Color', summary: 'Cool neutrals with a hint of blue. Ink is the main action. A hue appears only when it carries a meaning: accent, success, warning or danger.', render: () => {
       const sw = (n, v, use) => `<div class="sw"><b class="r-row" style="background:var(${v})"></b>${n}<code>${v}</code><span>${use}</span></div>`;
-      return `<div class="stack" style="width:100%;gap:20px"><span class="label">Neutrals</span><div class="swatches">${sw('Ground', '--bg', 'page, sidebar')}${sw('Ground muted', '--bg-muted', 'wells, canvas')}${sw('Surface', '--surface', 'cards, sheets')}${sw('Track', '--track', 'tracks, hover')}${sw('Ink', '--fg', 'text, main action')}${sw('Muted', '--fg-muted', 'secondary text')}${sw('Subtle', '--fg-subtle', 'meta, placeholder')}${sw('Border', '--border', 'input outline')}</div><span class="label">Meaning</span><div class="swatches">${sw('Blue', '--blue', 'running, links, focus')}${sw('Amber', '--amber', 'needs you')}${sw('Green', '--green', 'done, passed')}${sw('Red', '--red', 'failed, blocked')}${sw('Violet', '--violet', 'planning')}</div><span class="label">Charts (fixed order)</span><div class="swatches">${['1', '2', '3', '4', '5'].map((i) => sw('Series ' + i, '--c' + i, ['blue', 'orange', 'aqua', 'yellow', 'magenta'][i - 1])).join('')}</div></div>`; } },
+      return `<div class="stack" style="width:100%;gap:20px"><span class="label">Neutrals</span><div class="swatches">${sw('Ground', '--bg', 'page, sidebar')}${sw('Ground muted', '--bg-muted', 'wells, canvas')}${sw('Surface', '--surface', 'cards, sheets')}${sw('Track', '--track', 'tracks, hover')}${sw('Ink', '--fg', 'text, main action')}${sw('Muted', '--fg-muted', 'secondary text')}${sw('Subtle', '--fg-subtle', 'meta, placeholder')}${sw('Border', '--border', 'input outline')}</div><span class="label">Meaning</span><div class="swatches">${sw('Blue', '--blue', 'accent, info, links, focus')}${sw('Amber', '--amber', 'warning, attention')}${sw('Green', '--green', 'success')}${sw('Red', '--red', 'danger, error')}${sw('Violet', '--violet', 'extra category')}</div><span class="label">Charts (fixed order)</span><div class="swatches">${['1', '2', '3', '4', '5'].map((i) => sw('Series ' + i, '--c' + i, ['blue', 'orange', 'aqua', 'yellow', 'magenta'][i - 1])).join('')}</div></div>`; } },
     { id: 'type', name: 'Typography', summary: 'Geist for text, Geist Mono for IDs, times and code.', render: () => `<div style="width:100%">${[['display 30/36 · 600', 'font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.025em', 'Signals, not noise'], ['title 20/28 · 600', 'font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.015em', 'Weekly board'], ['heading 15/22 · 600', 'font-size:15px;line-height:22px;font-weight:600', 'Run #318'], ['body 14.5/23', 'font-size:14.5px;line-height:23px', 'The agent opened 3 pull requests and waits for review.'], ['small 13/18', 'font-size:13px;color:var(--fg-muted)', 'Updated 4 min ago'], ['label 11 caps', 'font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-subtle);font-weight:500', 'Output'], ['mono 12', 'font:400 12px var(--mono)', 'ITEM-41 · 8 pt · 02:14:09'], ['metric 30 · tabular', 'font-size:30px;font-weight:500;letter-spacing:-.035em;font-variant-numeric:tabular-nums', '1,284']].map(([c, s, t]) => `<div class="type-row"><code>${c}</code><span style="${s}">${t}</span></div>`).join('')}</div>` },
     { id: 'radius', name: 'Radius and corners', summary: 'Every rounded element names a role. Use the toolbar to compare continuous and round corners, and the soft and subtle levels.', render: () => `<div class="stack" style="width:100%;gap:16px"><div class="shapes">${['panel', 'card', 'item', 'row', 'chip', 'ctl'].map((r) => `<div class="shape"><b class="r-${r}"></b>${r === 'ctl' ? 'control' : r}<span class="rv" data-r="${r}"></span></div>`).join('')}</div><p class="muted" style="margin:0;font-size:13px">Continuous corners use <code class="mono">corner-shape: superellipse(1.5)</code> at 1.3× the radius. A browser without it draws the plain radius. Nested radius = outer radius − padding.</p></div>` },
     { id: 'elevation', name: 'Elevation', summary: 'A shadow draws an edge: a 0.5px ring plus a soft drop. Four levels, one job each.', render: () => `<div class="levels">${[['Frame', 'flat, hairline', 'box-shadow:inset 0 0 0 1px var(--hair)'], ['Card', 'shadow 1', 'background:var(--surface);box-shadow:var(--shadow-1)'], ['Raised', 'shadow 2: hover, open', 'background:var(--surface);box-shadow:var(--shadow-2)'], ['Float', 'shadow 3: menus, toasts', 'background:var(--surface);box-shadow:var(--shadow-3)']].map(([n, d, s]) => `<div class="lvl r-card" style="${s}"><div>${n}<small>${d}</small></div></div>`).join('')}</div>` },
@@ -873,11 +1072,11 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
     const units = ENTRIES.filter((e) => e.level === 'unit');
     const comps = ENTRIES.filter((e) => e.level === 'composition');
     const chip = (id) => `<a class="tag tag--line r-chip" href="#${id}">${esc(byId.get(id).name)}</a>`;
-    return `${crumb('Docs')}<div class="doc-head"><div><h1>Lumen v2</h1><p>A design system in two levels. <b>Units</b> are the smallest parts and know nothing about a product. <b>Compositions</b> combine units into generic patterns. A product screen combines compositions.</p></div><div class="row">${U.badge({ tone: 'grey', label: units.length + ' units' })}${U.badge({ tone: 'violet', label: comps.length + ' compositions' })}</div></div>
+    return `${crumb('Docs')}<div class="doc-head"><div><h1>Lumen v2</h1><p>A general-purpose design system for any product: apps, settings, commerce, dashboards, docs and agent tools. <b>Units</b> are the smallest parts. <b>Compositions</b> combine units into generic patterns. A product screen combines compositions.</p></div><div class="row">${U.badge({ tone: 'grey', label: units.length + ' units' })}${U.badge({ tone: 'violet', label: comps.length + ' compositions' })}</div></div>
       <div class="prose"><ul><li>Each page has a Playground with Controls and Code, then Stories, then Props.</li><li>A composition lists the units it is <b>built from</b>. A unit lists where it is <b>used in</b>.</li><li>The toolbar switches theme, corner shape and radius level for every page.</li></ul></div>
       <h2 class="doc-h2">Component unit list <small>${ENTRIES.length} components</small></h2>
       <div class="props-wrap r-row"><table><thead><tr><th>Name</th><th>Level</th><th>Group</th><th>Built from</th><th>Used in</th></tr></thead><tbody>${ENTRIES.map((e) => `<tr><td><a href="#${e.id}" style="color:var(--fg);font-weight:500;text-decoration:none">${esc(e.name)}</a></td><td>${levelBadge(e)}</td><td class="muted">${esc(e.group)}</td><td><div class="row" style="gap:4px">${(e.uses ?? []).map(chip).join('') || '<span class="muted">—</span>'}</div></td><td><div class="row" style="gap:4px">${usedIn(e.id).map((u) => chip(u.id)).join('') || '<span class="muted">—</span>'}</div></td></tr>`).join('')}</tbody></table></div>
-      <h2 class="doc-h2">Examples <small>screens made only of compositions</small></h2>
+      <h2 class="doc-h2">Examples <small>screens from different products, made only of compositions</small></h2>
       <div class="overview-grid">${EXAMPLES.map((e) => `<a class="ov-card r-card" href="#${e.id}"><span class="k">EXAMPLE</span><b>${esc(e.name)}</b><span>${esc(e.summary)}</span></a>`).join('')}</div>`;
   }
 
@@ -891,7 +1090,7 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
 
   function componentPage(e) {
     const args = defaults(e);
-    const isWide = ['column', 'chart', 'diagram', 'table', 'action', 'list-row', 'message', 'prompt', 'callout', 'code', 'disclosure', 'stages', 'timeline'].includes(e.id);
+    const isWide = ['alert', 'accordion', 'dialog', 'sheet', 'topbar', 'dl', 'file-drop', 'command', 'column', 'chart', 'diagram', 'table', 'action', 'list-row', 'message', 'prompt', 'callout', 'code', 'disclosure', 'stages', 'timeline'].includes(e.id);
     const rel = (title, ids) => `<div class="rel r-row"><b>${title}</b><div class="links">${ids.length ? ids.map((id) => `<a class="tag tag--line r-chip" href="#${id}">${esc(byId.get(id).name)}</a>`).join('') : '<span class="none">—</span>'}</div></div>`;
     return `${crumb(`<a href="#overview">Docs</a>`, e.level === 'unit' ? 'Units' : 'Compositions', esc(e.group))}
       <div class="doc-head"><div><h1>${esc(e.name)}</h1><p>${esc(e.summary)}</p></div><div class="row">${levelBadge(e)}</div></div>
@@ -927,6 +1126,11 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
       setTimeout(() => { b.lastChild.textContent = 'Copy'; }, 1400);
     }));
     $$('.prompt textarea', root).forEach((t) => t.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); t.value = ''; } }));
+    $$('.acc__head', root).forEach((h) => h.addEventListener('click', () => { const it = h.closest('.acc__item'), open = !it.classList.contains('is-open'); $$('.acc__item', it.parentElement).forEach((x) => { x.classList.remove('is-open'); x.querySelector('.acc__head').setAttribute('aria-expanded', 'false'); }); it.classList.toggle('is-open', open); h.setAttribute('aria-expanded', String(open)); }));
+    $$('[data-day]', root).forEach((d) => d.addEventListener('click', () => { $$('[data-day]', d.parentElement).forEach((x) => x.setAttribute('aria-pressed', String(x === d))); }));
+    $$('[data-page]', root).forEach((b) => b.addEventListener('click', () => { $$('[data-page]', b.parentElement).forEach((x) => x.toggleAttribute('aria-current', x === b)); b.setAttribute('aria-current', 'page'); }));
+    $$('.slider input', root).forEach((r) => r.addEventListener('input', () => { const p = (r.value - r.min) / ((r.max - r.min) || 1) * 100; r.style.setProperty('--p', p + '%'); const o = r.closest('.slider').querySelector('[data-out]'); if (o) o.textContent = r.value + (r.dataset.unit ?? ''); }));
+    $$('[data-nav]', root).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const group = a.closest('nav'); if (group) { $$('[data-nav]', group).forEach((x) => x.removeAttribute('aria-current')); a.setAttribute('aria-current', 'page'); } }));
     $$('[data-chart]', root).forEach((c) => (c.dataset.chart === 'bar' ? barChart(c) : lineChart(c, +c.dataset.series || 3)));
     showRadii();
   }
