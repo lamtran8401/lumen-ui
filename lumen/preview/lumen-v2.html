@@ -1,0 +1,964 @@
+<title>Lumen v2 Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one flat page frame; sections are flat frames; content sits on lifted cards. No glass. */
+:root {
+  --font: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bg: oklch(.972 .003 265);
+  --bg-muted: oklch(.952 .004 265);
+  --surface: oklch(1 0 0);
+  --track: oklch(.3 .02 265 / .055);
+  --hair: oklch(.3 .02 265 / .09);
+  --border: oklch(.915 .005 265);
+  --border-strong: oklch(.82 .008 265);
+  --fg: oklch(.21 .012 265);
+  --fg-muted: oklch(.48 .014 265);
+  --fg-subtle: oklch(.56 .012 265);
+  --on-ink: oklch(.99 0 0);
+  --ink-hover: oklch(.3 .014 265);
+
+  --blue: oklch(.54 .19 264);
+  --blue-ink: oklch(.48 .19 264);
+  --blue-subtle: oklch(.955 .028 264);
+  --amber: oklch(.66 .15 68);
+  --amber-ink: oklch(.5 .12 62);
+  --amber-subtle: oklch(.965 .04 80);
+  --green: oklch(.56 .13 155);
+  --green-ink: oklch(.47 .12 155);
+  --green-subtle: oklch(.958 .035 155);
+  --red: oklch(.56 .2 25);
+  --red-ink: oklch(.5 .19 25);
+  --red-subtle: oklch(.958 .025 25);
+  --violet: oklch(.55 .19 295);
+  --violet-ink: oklch(.5 .18 295);
+  --violet-subtle: oklch(.958 .03 295);
+
+  --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100; --c5: #e87ba4;
+
+  --sh-a: oklch(.3 .02 265 / .08);
+  --sh-b: oklch(.3 .02 265 / .05);
+  --sh-c: oklch(.3 .02 265 / .10);
+  --sh-d: oklch(.3 .02 265 / .18);
+  --shadow-1: 0 0 0 .5px var(--sh-a), 0 1px 2px var(--sh-b), 0 4px 12px -6px var(--sh-c);
+  --shadow-2: 0 0 0 .5px var(--sh-a), 0 2px 4px var(--sh-b), 0 12px 28px -12px var(--sh-d);
+  --shadow-3: 0 0 0 .5px var(--sh-a), 0 4px 8px var(--sh-b), 0 28px 56px -18px var(--sh-d);
+  --ink-shadow: inset 0 1px 0 oklch(1 0 0 / .14), 0 1px 2px oklch(.2 .02 265 / .22), 0 4px 10px -4px oklch(.2 .02 265 / .3);
+
+  --ease: cubic-bezier(.32, .72, 0, 1);
+  --out: cubic-bezier(.2, .8, .2, 1);
+
+  /* radius roles: soft is the default level */
+  --r-panel: 20px; --r-card: 16px; --r-item: 14px; --r-row: 12px; --r-chip: 8px; --r-ctl: 999px;
+  --k: 1.3;
+  --corner: superellipse(1.5);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: oklch(.16 .006 265); --bg-muted: oklch(.185 .007 265); --surface: oklch(.205 .008 265);
+    --track: oklch(1 0 0 / .05); --hair: oklch(1 0 0 / .08); --border: oklch(.28 .008 265); --border-strong: oklch(.4 .01 265);
+    --fg: oklch(.96 .004 265); --fg-muted: oklch(.74 .01 265); --fg-subtle: oklch(.66 .01 265);
+    --on-ink: oklch(.18 .01 265); --ink-hover: oklch(.88 .006 265);
+    --blue: oklch(.7 .15 264); --blue-ink: oklch(.78 .12 264); --blue-subtle: oklch(.27 .06 264);
+    --amber: oklch(.78 .14 75); --amber-ink: oklch(.82 .12 78); --amber-subtle: oklch(.27 .05 70);
+    --green: oklch(.72 .14 155); --green-ink: oklch(.8 .12 155); --green-subtle: oklch(.26 .045 155);
+    --red: oklch(.68 .17 25); --red-ink: oklch(.78 .13 25); --red-subtle: oklch(.27 .06 25);
+    --violet: oklch(.7 .15 295); --violet-ink: oklch(.8 .11 295); --violet-subtle: oklch(.27 .06 295);
+    --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181;
+    --sh-a: oklch(1 0 0 / .07); --sh-b: oklch(0 0 0 / .3); --sh-c: oklch(0 0 0 / .45); --sh-d: oklch(0 0 0 / .6);
+    --ink-shadow: inset 0 1px 0 oklch(1 0 0 / .5), 0 1px 2px oklch(0 0 0 / .4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: oklch(.16 .006 265); --bg-muted: oklch(.185 .007 265); --surface: oklch(.205 .008 265);
+  --track: oklch(1 0 0 / .05); --hair: oklch(1 0 0 / .08); --border: oklch(.28 .008 265); --border-strong: oklch(.4 .01 265);
+  --fg: oklch(.96 .004 265); --fg-muted: oklch(.74 .01 265); --fg-subtle: oklch(.66 .01 265);
+  --on-ink: oklch(.18 .01 265); --ink-hover: oklch(.88 .006 265);
+  --blue: oklch(.7 .15 264); --blue-ink: oklch(.78 .12 264); --blue-subtle: oklch(.27 .06 264);
+  --amber: oklch(.78 .14 75); --amber-ink: oklch(.82 .12 78); --amber-subtle: oklch(.27 .05 70);
+  --green: oklch(.72 .14 155); --green-ink: oklch(.8 .12 155); --green-subtle: oklch(.26 .045 155);
+  --red: oklch(.68 .17 25); --red-ink: oklch(.78 .13 25); --red-subtle: oklch(.27 .06 25);
+  --violet: oklch(.7 .15 295); --violet-ink: oklch(.8 .11 295); --violet-subtle: oklch(.27 .06 295);
+  --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181;
+  --sh-a: oklch(1 0 0 / .07); --sh-b: oklch(0 0 0 / .3); --sh-c: oklch(0 0 0 / .45); --sh-d: oklch(0 0 0 / .6);
+  --ink-shadow: inset 0 1px 0 oklch(1 0 0 / .5), 0 1px 2px oklch(0 0 0 / .4);
+  color-scheme: dark;
+}
+:root[data-radius="subtle"] { --r-panel: 12px; --r-card: 10px; --r-item: 9px; --r-row: 8px; --r-chip: 6px; --r-ctl: 9px; }
+:root[data-corner="round"] { --k: 1; --corner: round; }
+@supports not (corner-shape: round) { :root { --k: 1; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 14px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.mono { font-family: var(--mono); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* corner roles: every rounded element names its role */
+.r-panel, .r-card, .r-item, .r-row, .r-chip, .r-ctl { corner-shape: var(--corner); }
+.r-panel { border-radius: calc(var(--r-panel) * var(--k)); }
+.r-card { border-radius: calc(var(--r-card) * var(--k)); }
+.r-item { border-radius: calc(var(--r-item) * var(--k)); }
+.r-row { border-radius: calc(var(--r-row) * var(--k)); }
+.r-chip { border-radius: calc(var(--r-chip) * var(--k)); }
+.r-ctl { border-radius: calc(var(--r-ctl) * var(--k)); }
+.pill { border-radius: 999px; }
+
+/* page */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--hair); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.bar__in { max-width: 1160px; margin: 0 auto; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-right: auto; }
+.brand__mark { width: 22px; height: 22px; background: var(--fg); border-radius: 7px; corner-shape: var(--corner); display: grid; place-items: center; }
+.brand__mark i { width: 8px; height: 8px; border-radius: 99px; background: var(--amber); }
+.brand small { font-weight: 400; color: var(--fg-muted); font-size: 13px; }
+.knobs { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.knob { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-muted); }
+
+.page { max-width: 1160px; margin: 0 auto; padding-block: 28px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 40px; }
+.intro { max-width: 680px; }
+.intro h1 { font-size: 30px; line-height: 36px; letter-spacing: -.025em; font-weight: 600; margin: 0 0 8px; text-wrap: balance; }
+.intro p { margin: 0; color: var(--fg-muted); font-size: 15px; line-height: 24px; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.toc a { color: var(--fg-muted); text-decoration: none; font-size: 13px; padding: 4px 10px; background: var(--track); }
+.toc a:hover { color: var(--fg); }
+
+.sec { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 80px; }
+.sec__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; }
+.sec__head h2 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -.015em; }
+.sec__head p { margin: 0; color: var(--fg-muted); font-size: 13px; max-width: 560px; }
+.frame { background: var(--bg-muted); box-shadow: inset 0 0 0 1px var(--hair); padding: 20px; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.stack { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-subtle); }
+.note { font-size: 12px; color: var(--fg-muted); margin: 0; }
+
+/* card */
+.card { background: var(--surface); box-shadow: var(--shadow-1); padding: 16px 18px; min-width: 0; }
+.card h3 { margin: 0; font-size: 15px; font-weight: 600; line-height: 22px; }
+.card .desc { margin: 2px 0 0; font-size: 13px; color: var(--fg-muted); }
+
+/* foundations */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+.sw { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.sw b { display: block; height: 52px; box-shadow: inset 0 0 0 1px var(--hair); }
+.sw span { color: var(--fg-muted); }
+.type-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--hair); }
+.type-row:last-child { border-bottom: 0; }
+.type-row code { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); }
+.shapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+.shape { display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--fg-muted); }
+.shape b { display: block; height: 72px; background: var(--surface); box-shadow: var(--shadow-1); }
+.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; padding: 8px; }
+.lvl { height: 96px; display: grid; place-items: center; text-align: center; font-size: 13px; font-weight: 500; }
+.lvl small { display: block; font-weight: 400; color: var(--fg-muted); font-size: 12px; }
+
+/* buttons */
+.btn { --h: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: var(--h); padding: 0 14px; border: 0; cursor: pointer; font-size: 13px; font-weight: 500; line-height: 1; white-space: nowrap; user-select: none;
+  transition: background-color 140ms var(--out), box-shadow 140ms var(--out), color 140ms var(--out), transform 160ms var(--ease); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn svg { width: 15px; height: 15px; flex: none; }
+.btn--sm { --h: 26px; padding: 0 11px; font-size: 12px; gap: 6px; }
+.btn--lg { --h: 40px; padding: 0 18px; font-size: 14px; }
+.btn--icon { width: var(--h); padding: 0; }
+.btn--ink { background: var(--fg); color: var(--on-ink); box-shadow: var(--ink-shadow); }
+.btn--ink:hover:not(:disabled) { background: var(--ink-hover); }
+.btn--plain { background: var(--surface); color: var(--fg); box-shadow: var(--shadow-1); }
+.btn--plain:hover:not(:disabled) { box-shadow: var(--shadow-2); }
+.btn--quiet { background: transparent; color: var(--fg-muted); }
+.btn--quiet:hover:not(:disabled) { background: var(--track); color: var(--fg); }
+.btn--tint { background: var(--blue-subtle); color: var(--blue-ink); }
+.btn--tint:hover:not(:disabled) { box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--blue) 30%, transparent); }
+.btn--danger { background: var(--red-subtle); color: var(--red-ink); }
+.btn--danger:hover:not(:disabled) { box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--red) 35%, transparent); }
+.kbd { display: inline-grid; place-items: center; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 6px; corner-shape: var(--corner); font: 500 10.5px/1 var(--mono); box-shadow: inset 0 0 0 1px currentColor; opacity: .7; }
+.btn--plain .kbd, .btn--quiet .kbd { box-shadow: inset 0 0 0 1px var(--border-strong); color: var(--fg-muted); opacity: 1; }
+.spin { width: 14px; height: 14px; border-radius: 99px; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; opacity: .8; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-group { display: inline-flex; padding: 3px; gap: 2px; background: var(--track); box-shadow: inset 0 0 0 .5px var(--hair); }
+
+/* controls */
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font-size: 13px; font-weight: 500; }
+.field .hint { font-size: 12px; color: var(--fg-muted); }
+.field.is-error .hint { color: var(--red-ink); }
+.input { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); transition: box-shadow 140ms var(--out); }
+.input:hover { box-shadow: inset 0 0 0 1px var(--border-strong); }
+.input:focus-within { box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--blue) 70%, transparent), 0 0 0 3px color-mix(in oklch, var(--blue) 16%, transparent); }
+.field.is-error .input { box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--red) 70%, transparent), 0 0 0 3px color-mix(in oklch, var(--red) 14%, transparent); }
+.input input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font-size: 14px; }
+.input input::placeholder { color: var(--fg-subtle); }
+.input svg { width: 15px; height: 15px; color: var(--fg-subtle); flex: none; }
+.input .suffix { font-size: 12px; color: var(--fg-subtle); }
+.textarea { padding: 10px 12px; height: auto; align-items: flex-start; }
+.textarea textarea { flex: 1; border: 0; outline: 0; background: none; resize: vertical; min-height: 64px; font-size: 14px; line-height: 22px; }
+
+.seg { position: relative; display: inline-flex; align-self: flex-start; padding: 3px; gap: 2px; background: var(--track); box-shadow: inset 0 0 0 .5px var(--hair); }
+.seg button { position: relative; z-index: 1; height: 28px; padding: 0 13px; border: 0; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--fg-muted); transition: color 160ms var(--out); }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-selected="true"] { color: var(--fg); }
+.seg__thumb { position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 0; width: 0; background: var(--surface); box-shadow: var(--shadow-1); transition: transform 360ms var(--ease), width 360ms var(--ease); }
+.seg--sm button { height: 24px; padding: 0 10px; font-size: 12px; }
+
+.tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--hair); }
+.tabs button { position: relative; border: 0; background: none; padding: 8px 0 10px; font-size: 13px; font-weight: 500; color: var(--fg-muted); cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--fg); }
+.tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; border-radius: 2px; background: var(--fg); }
+.tabs .count { font: 500 11px var(--mono); color: var(--fg-subtle); margin-left: 4px; }
+
+.switch { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch__track { flex: none; width: 36px; height: 22px; padding: 2px; border-radius: 999px; background: var(--border-strong); transition: background-color 220ms var(--out); }
+.switch__knob { display: block; width: 18px; height: 18px; border-radius: 999px; background: oklch(1 0 0); box-shadow: 0 1px 2px oklch(0 0 0 / .2), 0 2px 6px -2px oklch(0 0 0 / .2); transition: transform 300ms var(--ease); }
+.switch input:checked + .switch__track { background: var(--fg); }
+.switch input:checked + .switch__track .switch__knob { transform: translateX(14px); }
+.switch input:focus-visible + .switch__track { outline: 2px solid var(--blue); outline-offset: 2px; }
+.switch b { display: block; font-size: 14px; font-weight: 500; line-height: 22px; }
+.switch span.d { display: block; font-size: 13px; color: var(--fg-muted); }
+
+.check { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
+.check input { appearance: none; margin: 0; width: 18px; height: 18px; border-radius: 6px; corner-shape: var(--corner); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-strong); display: grid; place-items: center; cursor: pointer; transition: background-color 140ms var(--out); }
+.check input:checked { background: var(--fg); box-shadow: none; }
+.check input:checked::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--on-ink); border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+
+/* chips */
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px; font-size: 12px; font-weight: 500; white-space: nowrap; background: var(--t-subtle, var(--track)); color: var(--t-ink, var(--fg-muted)); }
+.chip--dot::before { content: ""; width: 6px; height: 6px; border-radius: 99px; background: var(--t, var(--fg-subtle)); }
+.chip--line { background: transparent; box-shadow: inset 0 0 0 1px var(--border); color: var(--fg-muted); }
+.chip--mono { font: 500 11.5px var(--mono); height: 20px; padding: 0 7px; background: var(--track); color: var(--fg-muted); }
+.t-blue { --t: var(--blue); --t-ink: var(--blue-ink); --t-subtle: var(--blue-subtle); }
+.t-amber { --t: var(--amber); --t-ink: var(--amber-ink); --t-subtle: var(--amber-subtle); }
+.t-green { --t: var(--green); --t-ink: var(--green-ink); --t-subtle: var(--green-subtle); }
+.t-red { --t: var(--red); --t-ink: var(--red-ink); --t-subtle: var(--red-subtle); }
+.t-violet { --t: var(--violet); --t-ink: var(--violet-ink); --t-subtle: var(--violet-subtle); }
+.t-grey { --t: var(--fg-subtle); --t-ink: var(--fg-muted); --t-subtle: var(--track); }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 99px; background: var(--t); flex: none; }
+.breathe { animation: breathe 2.6s var(--ease) infinite; }
+@keyframes breathe { 50% { box-shadow: 0 0 0 4px color-mix(in oklch, var(--t, var(--blue)) 22%, transparent); } }
+.avatar { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 99px; font: 600 10px var(--mono); background: var(--t-subtle); color: var(--t-ink); flex: none; }
+.avatar--agent { border-radius: 8px; corner-shape: var(--corner); }
+
+/* work tracking */
+.lane { display: flex; gap: 4px; padding: 4px; background: var(--surface); box-shadow: var(--shadow-1); overflow-x: auto; }
+.lane__seg { flex: 1 0 auto; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; font-size: 13px; background: var(--t-subtle); color: var(--t-ink); white-space: nowrap; }
+.lane__seg b { font-weight: 600; }
+.lane__seg .pt { font: 400 11.5px var(--mono); opacity: .8; }
+.board { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+.col { background: var(--track); padding: 8px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.col__head { display: flex; align-items: center; gap: 8px; padding: 6px 8px 2px; font-size: 13px; font-weight: 600; }
+.col__head .n { font-weight: 400; color: var(--fg-subtle); }
+.col__head .pt { margin-left: auto; font: 400 11.5px var(--mono); color: var(--fg-subtle); }
+.col__desc { margin: 0 8px 4px; font-size: 12px; color: var(--fg-muted); line-height: 17px; }
+.item { background: var(--surface); box-shadow: var(--shadow-1); padding: 10px 12px; display: flex; flex-direction: column; gap: 7px; cursor: pointer; transition: box-shadow 180ms var(--out), transform 200ms var(--ease); }
+.item:hover { box-shadow: var(--shadow-2); }
+.item:active { transform: scale(.985); }
+.item.is-need { box-shadow: 0 0 0 1px color-mix(in oklch, var(--amber) 55%, transparent), 0 4px 14px -6px color-mix(in oklch, var(--amber) 35%, transparent); }
+.item.is-blocked { box-shadow: 0 0 0 1px color-mix(in oklch, var(--red) 40%, transparent), 0 4px 14px -6px color-mix(in oklch, var(--red) 30%, transparent); }
+.item.is-selected { box-shadow: 0 0 0 1.5px color-mix(in oklch, var(--blue) 55%, transparent), 0 6px 16px -8px color-mix(in oklch, var(--blue) 35%, transparent); }
+.item__top { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fg-subtle); }
+.item__top .id { font: 500 12px var(--mono); }
+.item__top .area { margin-left: auto; }
+.item__title { font-size: 14px; font-weight: 500; line-height: 19px; }
+.slices { display: flex; gap: 3px; }
+.slices i { flex: 1; height: 3px; border-radius: 3px; background: var(--border); }
+.slices i.d { background: var(--green); }
+.slices i.r { background: var(--blue); }
+.item__foot { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--fg-muted); }
+.item__foot .cnt { margin-left: auto; font: 400 11.5px var(--mono); color: var(--fg-subtle); }
+
+.calls { background: var(--amber-subtle); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--amber) 45%, transparent); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.calls__head { display: flex; align-items: baseline; gap: 10px; }
+.calls__head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.calls__head span { font-size: 12px; color: var(--amber-ink); }
+.call { background: var(--surface); box-shadow: var(--shadow-1); padding: 12px 14px; display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: center; }
+.call__meta, .call__title, .call__why { grid-column: 1; }
+.call__meta { display: flex; align-items: center; gap: 8px; }
+.call__title { font-size: 14.5px; font-weight: 600; line-height: 20px; }
+.call__why { font-size: 13px; color: var(--fg-muted); }
+.call__act { grid-row: 1 / span 3; grid-column: 2; display: flex; gap: 6px; }
+.answers { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 6px; }
+.answer { text-align: left; border: 0; cursor: pointer; padding: 10px 12px; background: var(--bg-muted); box-shadow: inset 0 0 0 1px var(--hair); transition: box-shadow 160ms var(--out), background-color 160ms var(--out); }
+.answer:hover { background: var(--surface); box-shadow: var(--shadow-1); }
+.answer.is-rec { background: var(--surface); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--amber) 60%, transparent); }
+.answer b { font-size: 13.5px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.answer span { display: block; font-size: 12.5px; color: var(--fg-muted); margin-top: 2px; line-height: 18px; }
+
+.stat { background: var(--surface); box-shadow: var(--shadow-1); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.stat__label { font-size: 13px; font-weight: 500; color: var(--fg-muted); }
+.stat__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.stat__value { font: 500 30px/34px var(--font); font-variant-numeric: tabular-nums; letter-spacing: -.035em; white-space: nowrap; }
+.stat__value small { font-size: 14px; color: var(--fg-muted); margin-left: 2px; letter-spacing: 0; }
+.stat__foot { font-size: 12px; color: var(--fg-muted); display: flex; gap: 6px; align-items: center; }
+.up { color: var(--green-ink); font-weight: 500; }
+.down { color: var(--red-ink); font-weight: 500; }
+.spark { flex: none; }
+.spark path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* agent */
+.chat { display: flex; flex-direction: column; gap: 16px; }
+.msg { display: flex; gap: 10px; max-width: 620px; }
+.msg--you { margin-left: auto; flex-direction: row-reverse; }
+.msg__col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.msg--you .msg__col { align-items: flex-end; }
+.msg__meta { font-size: 12px; color: var(--fg-subtle); display: flex; gap: 8px; }
+.msg__meta b { color: var(--fg); font-weight: 500; }
+.msg__body { font-size: 14.5px; line-height: 23px; }
+.msg--you .msg__body { background: var(--surface); box-shadow: var(--shadow-1); padding: 9px 14px; }
+.msg--agent .msg__body p { margin: 0 0 8px; }
+.event { align-self: center; display: inline-flex; gap: 8px; align-items: center; font-size: 12px; color: var(--fg-muted); padding: 4px 12px; background: var(--track); }
+.caret { display: inline-block; width: 7px; height: 15px; margin-left: 2px; vertical-align: -2px; border-radius: 2px; background: var(--fg); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.tool { background: var(--surface); box-shadow: var(--shadow-1); overflow: hidden; }
+.tool__head { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border: 0; background: none; cursor: pointer; text-align: left; min-height: 40px; }
+.tool__name { font: 500 12.5px var(--mono); }
+.tool__arg { flex: 1; min-width: 0; font-size: 12.5px; color: var(--fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tool__dur { font: 400 11.5px var(--mono); color: var(--fg-subtle); }
+.tool__chev { width: 16px; height: 16px; color: var(--fg-subtle); transition: transform 300ms var(--ease); }
+.tool.is-open .tool__chev { transform: rotate(180deg); }
+.tool__body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 360ms var(--ease); }
+.tool.is-open .tool__body { grid-template-rows: 1fr; }
+.tool__body > div { overflow: hidden; }
+.tool__inner { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+.pre { margin: 0; padding: 10px 12px; background: var(--bg-muted); box-shadow: inset 0 0 0 1px var(--hair); font: 400 12px/18px var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.steps { list-style: none; margin: 0; padding: 0; }
+.step { display: grid; grid-template-columns: 22px 1fr; gap: 12px; }
+.step__rail { position: relative; display: flex; justify-content: center; }
+.step__rail::after { content: ""; position: absolute; top: 24px; bottom: 0; width: 1.5px; border-radius: 2px; background: var(--border); }
+.step:last-child .step__rail::after { display: none; }
+.step__node { position: relative; z-index: 1; margin-top: 1px; width: 22px; height: 22px; border-radius: 99px; display: grid; place-items: center; background: var(--t-subtle); color: var(--t-ink); }
+.step__node svg { width: 13px; height: 13px; }
+.step__body { padding-bottom: 16px; min-width: 0; }
+.step__row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 500; line-height: 24px; }
+.step__row span { font: 400 11.5px var(--mono); color: var(--t-ink); white-space: nowrap; }
+.step__detail { font-size: 13px; color: var(--fg-muted); }
+.step.is-wait .step__row { color: var(--fg-muted); font-weight: 400; }
+
+.composer { background: var(--surface); box-shadow: var(--shadow-2); padding: 12px 12px 10px 16px; display: flex; flex-direction: column; gap: 8px; transition: box-shadow 200ms var(--out); }
+.composer:focus-within { box-shadow: var(--shadow-2), 0 0 0 3px color-mix(in oklch, var(--blue) 14%, transparent); }
+.composer textarea { border: 0; outline: 0; background: none; resize: none; font-size: 15px; line-height: 23px; min-height: 46px; }
+.composer textarea::placeholder { color: var(--fg-subtle); }
+.composer__bar { display: flex; align-items: center; gap: 6px; margin-left: -6px; }
+.composer__bar .send { margin-left: auto; }
+
+.session { background: var(--surface); box-shadow: var(--shadow-1); padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+.session b { font-size: 13px; font-weight: 600; display: block; }
+.session .sub { display: block; font: 400 11.5px var(--mono); color: var(--fg-muted); }
+
+/* guide book */
+.doc { background: var(--surface); box-shadow: var(--shadow-1); padding: 32px clamp(18px, 5vw, 56px) 36px; }
+.doc__in { max-width: 660px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font: 500 12px var(--mono); color: var(--blue-ink); }
+.doc h2 { margin: 0; font-size: 28px; line-height: 34px; letter-spacing: -.025em; font-weight: 600; text-wrap: balance; }
+.doc h3 { margin: 12px 0 0; font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -.01em; }
+.doc p { margin: 0; font-size: 15.5px; line-height: 26px; }
+.doc p.lead { font-size: 17px; line-height: 28px; color: var(--fg-muted); }
+.doc code { font: 500 .88em var(--mono); padding: 1px 6px; border-radius: 6px; corner-shape: var(--corner); background: var(--track); }
+.callout { display: grid; grid-template-columns: 20px 1fr; gap: 2px 10px; padding: 12px 16px; background: var(--t-subtle); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--t) 24%, transparent); }
+.callout svg { width: 16px; height: 16px; color: var(--t-ink); margin-top: 3px; }
+.callout b { font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--t-ink); font-weight: 600; line-height: 22px; }
+.callout p { grid-column: 2; font-size: 14.5px !important; line-height: 23px !important; }
+.code { background: var(--bg-muted); box-shadow: inset 0 0 0 1px var(--hair); overflow: hidden; }
+.code__head { display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 14px; border-bottom: 1px solid var(--hair); font: 400 12px var(--mono); color: var(--fg-muted); }
+.code pre { margin: 0; padding: 12px 14px 14px; overflow-x: auto; font: 400 13px/21px var(--mono); }
+.code .c { color: var(--fg-subtle); }
+.code .k { color: var(--violet-ink); }
+.code .s { color: var(--green-ink); }
+.table-wrap { overflow-x: auto; box-shadow: inset 0 0 0 1px var(--hair); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--hair); }
+th { font-weight: 500; color: var(--fg-muted); font-size: 12px; background: var(--bg-muted); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* charts */
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font-family: var(--font); }
+.ax { fill: var(--fg-muted); font-size: 11px; }
+.grid-l { stroke: var(--hair); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--fg-muted); margin-bottom: 8px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.tip { position: absolute; pointer-events: none; min-width: 150px; padding: 8px 10px; background: var(--surface); box-shadow: var(--shadow-3); font-size: 12px; opacity: 0; transform: translateY(4px) scale(.98); transition: opacity 140ms var(--out), transform 220ms var(--ease); }
+.tip.on { opacity: 1; transform: none; }
+.tip b { display: block; margin-bottom: 4px; font-weight: 600; }
+.tip div { display: flex; align-items: center; gap: 6px; }
+.tip div span:last-child { margin-left: auto; padding-left: 12px; font-family: var(--mono); }
+.tip i { width: 8px; height: 8px; border-radius: 2px; }
+
+.stage { background: var(--bg-muted); box-shadow: inset 0 0 0 1px var(--hair); padding: 14px; overflow-x: auto; }
+.stage svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.zone { fill: none; stroke: var(--border-strong); stroke-dasharray: 5 4; stroke-width: 1.2; }
+.zone-l { font: 500 10.5px var(--mono); letter-spacing: .06em; fill: var(--fg-subtle); }
+.node rect { fill: var(--surface); stroke: color-mix(in oklch, var(--border-strong) 60%, transparent); stroke-width: 1; filter: drop-shadow(0 1px 1px oklch(.3 .02 265 / .06)) drop-shadow(0 6px 10px oklch(.3 .02 265 / .07)); }
+.node .k { font: 500 9.5px var(--mono); letter-spacing: .06em; fill: var(--fg-subtle); }
+.node .t { font-size: 13px; font-weight: 600; fill: var(--fg); }
+.node.is-now rect { fill: var(--fg); stroke: none; }
+.node.is-now .t { fill: var(--on-ink); }
+.node.is-now .k { fill: color-mix(in oklch, var(--on-ink) 70%, transparent); }
+.node.is-gate rect { stroke: var(--amber); stroke-width: 1.2; }
+.edge { fill: none; stroke: var(--fg-subtle); stroke-width: 1.2; }
+.edge.dash { stroke-dasharray: 4 4; }
+.edge.live { stroke: var(--blue); stroke-dasharray: 4 6; animation: flow 1s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -20; } }
+.edge-l { font: 400 10.5px var(--mono); fill: var(--fg-muted); }
+.arrow { fill: var(--fg-subtle); }
+
+.toast { display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 14px; background: var(--surface); box-shadow: var(--shadow-3); font-size: 13px; max-width: 420px; }
+.toast .grow { flex: 1; }
+
+@media (max-width: 640px) {
+  .call { grid-template-columns: 1fr; }
+  .call__act { grid-row: auto; grid-column: 1; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .frame { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="3 3.3"/></symbol>
+  <symbol id="i-run" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m21 11-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19L12 4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l11-7Z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor"/></symbol>
+</svg>
+
+<header class="bar">
+  <div class="bar__in">
+    <div class="brand"><span class="brand__mark"><i></i></span>Lumen <small>v2 preview</small></div>
+    <div class="knobs">
+      <div class="knob">Theme
+        <div class="seg seg--sm pill" data-knob="theme"><span class="seg__thumb pill"></span><button aria-selected="true" data-v="system">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+      </div>
+      <div class="knob">Corners
+        <div class="seg seg--sm pill" data-knob="corner"><span class="seg__thumb pill"></span><button aria-selected="true" data-v="continuous">Continuous</button><button data-v="round">Round</button></div>
+      </div>
+      <div class="knob">Radius
+        <div class="seg seg--sm pill" data-knob="radius"><span class="seg__thumb pill"></span><button aria-selected="true" data-v="soft">Soft</button><button data-v="subtle">Subtle</button></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="intro">
+    <h1>Lumen v2: the look before the build</h1>
+    <p>This page shows every component in the new direction. Approve or mark changes here; the React build starts after approval. Use the three switches above to compare corner shapes and radius levels.</p>
+    <nav class="toc">
+      <a class="pill" href="#foundations">Foundations</a><a class="pill" href="#actions">Buttons</a><a class="pill" href="#controls">Controls</a><a class="pill" href="#work">Work tracking</a><a class="pill" href="#agent">AI agent</a><a class="pill" href="#guide">Guide book</a><a class="pill" href="#charts">Charts and diagrams</a>
+    </nav>
+  </section>
+
+  <!-- FOUNDATIONS -->
+  <section class="sec" id="foundations">
+    <div class="sec__head"><h2>Foundations</h2><p>Cool neutrals with a hint of blue. Ink is the main action. Color appears only when it means a state.</p></div>
+    <div class="frame r-panel stack">
+      <span class="label">Color</span>
+      <div class="swatches">
+        <div class="sw"><b class="r-row" style="background:var(--bg)"></b>Ground<span>page frame</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--surface)"></b>Surface<span>cards, rows</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--fg)"></b>Ink<span>text, main action</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--fg-muted)"></b>Muted<span>secondary text</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--blue)"></b>Blue<span>running, links, focus</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--amber)"></b>Amber<span>your call</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--green)"></b>Green<span>done, passed</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--red)"></b>Red<span>blocked, failed</span></div>
+        <div class="sw"><b class="r-row" style="background:var(--violet)"></b>Violet<span>planning</span></div>
+      </div>
+      <div class="grid g2" style="margin-top:8px">
+        <div class="stack">
+          <span class="label">Type · Geist and Geist Mono</span>
+          <div>
+            <div class="type-row"><code>display 30/36</code><span style="font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.025em">Signals, not noise</span></div>
+            <div class="type-row"><code>title 20/28</code><span style="font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.015em">Sprint 42 board</span></div>
+            <div class="type-row"><code>body 14.5/23</code><span style="font-size:14.5px;line-height:23px">The agent opened 3 pull requests and waits for review.</span></div>
+            <div class="type-row"><code>small 13/18</code><span style="font-size:13px;color:var(--fg-muted)">Updated 4 min ago by planner-agent</span></div>
+            <div class="type-row"><code>mono 12</code><span class="mono" style="font-size:12px">SHOP-41 · 8 pt · 02:14:09</span></div>
+            <div class="type-row"><code>metric 30</code><span class="num" style="font-size:30px;font-weight:500;letter-spacing:-.035em">1,284</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <span class="label">Radius roles</span>
+          <div class="shapes">
+            <div class="shape"><b class="r-panel"></b>panel · <span class="rv" data-r="panel"></span></div>
+            <div class="shape"><b class="r-card"></b>card · <span class="rv" data-r="card"></span></div>
+            <div class="shape"><b class="r-item"></b>item · <span class="rv" data-r="item"></span></div>
+            <div class="shape"><b class="r-row"></b>row · <span class="rv" data-r="row"></span></div>
+          </div>
+          <p class="note">Continuous corners use <span class="mono">corner-shape: superellipse(1.5)</span> at 1.3× the radius. A browser without it draws the plain radius.</p>
+        </div>
+      </div>
+      <span class="label" style="margin-top:8px">Layers</span>
+      <div class="levels">
+        <div class="lvl r-card" style="box-shadow:inset 0 0 0 1px var(--hair)"><div>Frame<small>flat, hairline only</small></div></div>
+        <div class="lvl r-card" style="background:var(--surface);box-shadow:var(--shadow-1)"><div>Card<small>shadow 1: ring + soft drop</small></div></div>
+        <div class="lvl r-card" style="background:var(--surface);box-shadow:var(--shadow-2)"><div>Raised<small>shadow 2: hover, open</small></div></div>
+        <div class="lvl r-card" style="background:var(--surface);box-shadow:var(--shadow-3)"><div>Float<small>shadow 3: menus, toasts</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="sec" id="actions">
+    <div class="sec__head"><h2>Buttons</h2><p>One ink button in each region. Hover changes fill or shadow only. Press shrinks to 0.97 on a spring.</p></div>
+    <div class="frame r-panel stack">
+      <div class="grid g2">
+        <div class="card r-card stack">
+          <span class="label">Variants</span>
+          <div class="row">
+            <button class="btn btn--ink r-ctl">Approve <span class="kbd">A</span></button>
+            <button class="btn btn--plain r-ctl">Review</button>
+            <button class="btn btn--quiet r-ctl">Skip</button>
+            <button class="btn btn--tint r-ctl">Open run</button>
+            <button class="btn btn--danger r-ctl">Stop agent</button>
+          </div>
+          <p class="note">Ink: the one main action. Plain: every other action. Quiet: low-weight actions in rows. Tint: a link-like action. Danger: stop or delete.</p>
+        </div>
+        <div class="card r-card stack">
+          <span class="label">Sizes and states</span>
+          <div class="row">
+            <button class="btn btn--ink btn--sm r-ctl">Small</button>
+            <button class="btn btn--ink r-ctl">Default</button>
+            <button class="btn btn--ink btn--lg r-ctl">Large</button>
+            <button class="btn btn--ink r-ctl" disabled><span class="spin"></span>Deploying</button>
+            <button class="btn btn--plain r-ctl" disabled>Disabled</button>
+          </div>
+          <div class="row">
+            <button class="btn btn--plain btn--icon r-ctl" aria-label="Add"><svg><use href="#i-plus"/></svg></button>
+            <button class="btn btn--ink btn--icon r-ctl" aria-label="Send"><svg><use href="#i-up"/></svg></button>
+            <button class="btn btn--plain r-ctl"><svg><use href="#i-play"/></svg>Resume</button>
+            <div class="btn-group r-ctl"><button class="btn btn--plain btn--sm r-ctl">Keep</button><button class="btn btn--quiet btn--sm r-ctl">Flip</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTROLS -->
+  <section class="sec" id="controls">
+    <div class="sec__head"><h2>Controls</h2><p>Tracks are a tinted capsule. The selected item is a white thumb that slides on a spring.</p></div>
+    <div class="frame r-panel">
+      <div class="grid g3">
+        <div class="card r-card stack">
+          <div class="field"><label for="f-title">Task title</label><div class="input r-ctl"><input id="f-title" placeholder="Add retry to the log ingester"></div><span class="hint">Start with a verb.</span></div>
+          <div class="field is-error"><label for="f-budget">Token budget</label><div class="input r-ctl"><input id="f-budget" value="1200"><span class="suffix">tokens</span></div><span class="hint">Budget must be 2,000 tokens or more.</span></div>
+          <div class="input r-ctl"><svg><use href="#i-search"/></svg><input id="f-search" placeholder="Search or run…" aria-label="Search"><span class="kbd" style="color:var(--fg-subtle);box-shadow:inset 0 0 0 1px var(--border-strong)">⌘K</span></div>
+        </div>
+        <div class="card r-card stack">
+          <span class="label">Segmented</span>
+          <div class="seg pill" data-seg><span class="seg__thumb pill"></span><button aria-selected="true">Phases</button><button>Who holds it</button><button>List</button></div>
+          <div class="seg seg--sm pill" data-seg><span class="seg__thumb pill"></span><button>24h</button><button aria-selected="true">7d</button><button>30d</button></div>
+          <span class="label" style="margin-top:6px">Tabs</span>
+          <div class="tabs" data-tabs><button aria-selected="true">Activity<span class="count">12</span></button><button>Files<span class="count">4</span></button><button>Receipts</button></div>
+        </div>
+        <div class="card r-card stack">
+          <label class="switch"><input type="checkbox" id="sw-1" checked><span class="switch__track"><span class="switch__knob"></span></span><span><b>Auto-approve read-only tools</b><span class="d">grep, read and list run without a prompt.</span></span></label>
+          <label class="switch"><input type="checkbox" id="sw-2"><span class="switch__track"><span class="switch__knob"></span></span><span><b>Allow network access</b><span class="d">Off for every new run.</span></span></label>
+          <label class="check"><input type="checkbox" id="ck-1" checked>Write tests first</label>
+          <label class="check"><input type="checkbox" id="ck-2">Open a draft pull request</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK TRACKING -->
+  <section class="sec" id="work">
+    <div class="sec__head"><h2>Work tracking</h2><p>Columns are tracks, not boxes. A card shows its state by its ring: amber needs you, red is blocked, blue is selected.</p></div>
+    <div class="frame r-panel stack">
+      <div class="lane pill">
+        <div class="lane__seg pill t-grey"><b>Todo</b> 3 <span class="pt">9 pt</span></div>
+        <div class="lane__seg pill t-violet"><b>Framing</b> 2 <span class="pt">4 pt</span><span class="dot t-red"></span></div>
+        <div class="lane__seg pill t-blue"><b>Executing</b> 5 <span class="pt">18 pt</span></div>
+        <div class="lane__seg pill t-amber"><b>Reviewing</b> 3 <span class="pt">13 pt</span><span class="dot t-red"></span></div>
+        <div class="lane__seg pill t-green"><b>Done</b> 2 <span class="pt">4 pt</span></div>
+      </div>
+      <div class="board">
+        <div class="col r-panel">
+          <div class="col__head"><span class="dot t-violet"></span>Framing <span class="n">2</span><span class="pt">4 pt</span></div>
+          <p class="col__desc">The lead writes why, what and how. You approve.</p>
+          <article class="item r-item is-need" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-44</span><span class="chip chip--mono r-chip">2 pt</span><span class="area">web</span></div>
+            <div class="item__title">Copy a booking reference with one click</div>
+            <div class="slices"><i class="d"></i><i class="r"></i><i></i><i></i></div>
+            <div class="item__foot"><span class="dot t-amber"></span>waits for your approve<span class="cnt">0/1</span></div>
+          </article>
+          <article class="item r-item" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-46</span><span class="chip chip--mono r-chip">2 pt</span><span class="area">ops</span></div>
+            <div class="item__title">Runbook: replay a failed cut-off job</div>
+            <div class="slices"><i class="d"></i><i></i><i></i></div>
+            <div class="item__foot"><span class="dot t-violet"></span>the lead runs /specify</div>
+          </article>
+        </div>
+        <div class="col r-panel">
+          <div class="col__head"><span class="dot t-blue"></span>Executing <span class="n">3</span><span class="pt">18 pt</span></div>
+          <p class="col__desc">Builders work slice by slice, test first.</p>
+          <article class="item r-item is-selected" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-41</span><span class="chip chip--mono r-chip">8 pt</span><span class="area">contracts +3</span></div>
+            <div class="item__title">Amend a confirmed booking</div>
+            <div class="slices"><i class="d"></i><i class="d"></i><i class="r"></i><i></i><i></i></div>
+            <div class="item__foot"><span class="dot t-blue breathe"></span>builder-agent on slice 3<span class="cnt">3/8</span></div>
+          </article>
+          <article class="item r-item is-blocked" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-52</span><span class="chip chip--mono r-chip">1 pt</span><span class="chip r-chip t-red">sub-bug</span><span class="area">api</span></div>
+            <div class="item__title">Search misses a container number typed with a space</div>
+            <div class="slices"><i class="d"></i><i></i></div>
+            <div class="item__foot"><span class="dot t-red"></span>blocked: waits for SHOP-41<span class="cnt">0/1</span></div>
+          </article>
+        </div>
+        <div class="col r-panel">
+          <div class="col__head"><span class="dot t-amber"></span>Reviewing <span class="n">2</span><span class="pt">13 pt</span></div>
+          <p class="col__desc">QA checks run, you accept, then the PR merges.</p>
+          <article class="item r-item is-need" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-38</span><span class="chip chip--mono r-chip">5 pt</span><span class="area">api · web</span></div>
+            <div class="item__title">Show the cut-off countdown on a booking</div>
+            <div class="slices"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></div>
+            <div class="item__foot"><span class="dot t-amber"></span>waits for your accept<span class="cnt">4/4</span></div>
+          </article>
+          <article class="item r-item" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-35</span><span class="chip chip--mono r-chip">5 pt</span><span class="area">api</span></div>
+            <div class="item__title">Search bookings by container number</div>
+            <div class="slices"><i class="d"></i><i class="d"></i><i class="r"></i></div>
+            <div class="item__foot"><span class="dot t-blue"></span>review-agent checks<span class="cnt">2/3</span></div>
+          </article>
+        </div>
+        <div class="col r-panel">
+          <div class="col__head"><span class="dot t-green"></span>Done <span class="n">1</span><span class="pt">4 pt</span></div>
+          <p class="col__desc">Closed. The wiki and the lessons are kept.</p>
+          <article class="item r-item" tabindex="0">
+            <div class="item__top"><span class="id">SHOP-30</span><span class="chip chip--mono r-chip">4 pt</span><span class="area">web</span></div>
+            <div class="item__title">Booking history tab</div>
+            <div class="slices"><i class="d"></i><i class="d"></i></div>
+            <div class="item__foot"><span class="dot t-green"></span>merged 2 days ago<span class="cnt">2/2</span></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="grid g2" style="align-items:start">
+        <div class="calls r-panel">
+          <div class="calls__head"><h3>Calls for you</h3><span>3 open · the lead does the rest</span></div>
+          <div class="call r-item">
+            <div class="call__meta"><span class="chip r-chip t-amber">Accept</span><span class="mono" style="font-size:12px;color:var(--fg-subtle)">SHOP-38</span></div>
+            <div class="call__title">Show the cut-off countdown on a booking</div>
+            <div class="call__why">5 of 5 criteria met. Every check passes.</div>
+            <div class="call__act"><button class="btn btn--ink btn--sm r-ctl">Accept <span class="kbd">A</span></button><button class="btn btn--plain btn--sm r-ctl">Review</button></div>
+          </div>
+          <div class="call r-item">
+            <div class="call__meta"><span class="chip r-chip t-amber">Question</span><span class="mono" style="font-size:12px;color:var(--fg-subtle)">SHOP-41</span></div>
+            <div class="call__title">After the cut-off, can the desk still approve an amend?</div>
+            <div class="call__why">Q3 blocks slice 8. The lead keeps building the other slices.</div>
+            <div class="answers">
+              <button class="answer r-row is-rec"><b>No for now <span class="chip r-chip t-amber">recommended</span></b><span>Refuse every amend after the cut-off.</span></button>
+              <button class="answer r-row"><b>Yes, with a reason</b><span>The desk can approve and must write why.</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+            <div class="stat r-card">
+              <div class="stat__label">Runs today</div>
+              <div class="stat__row"><div class="stat__value">1,284</div><svg class="spark" width="84" height="30" aria-hidden="true"><path stroke="var(--blue)" d="M2,24 L14,20 L26,22 L38,15 L50,16 L62,10 L80,5"/></svg></div>
+              <div class="stat__foot"><span class="up">↑ 12%</span>vs yesterday</div>
+            </div>
+            <div class="stat r-card">
+              <div class="stat__label">p95 latency</div>
+              <div class="stat__row"><div class="stat__value">412<small>ms</small></div><svg class="spark" width="84" height="30" aria-hidden="true"><path stroke="var(--red)" d="M2,22 L14,24 L26,19 L38,17 L50,12 L62,13 L80,8"/></svg></div>
+              <div class="stat__foot"><span class="down">↑ 8%</span>vs last week</div>
+            </div>
+          </div>
+          <div class="session r-item">
+            <span class="avatar t-blue">LD</span>
+            <div style="min-width:0"><b>The lead</b><span class="sub">Claude Code · SHOP-41 slice 3</span></div>
+            <span class="chip r-chip t-blue" style="margin-left:auto"><span class="dot t-blue breathe"></span>running</span>
+          </div>
+          <div class="toast r-row"><span class="dot t-green"></span><span class="grow">SHOP-38 accepted. The PR merges after CI.</span><button class="btn btn--quiet btn--sm r-ctl">Undo</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENT -->
+  <section class="sec" id="agent">
+    <div class="sec__head"><h2>AI agent</h2><p>Agent text sits on the ground. Your message, tool calls and the composer are cards. Running work breathes.</p></div>
+    <div class="frame r-panel">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+        <div class="chat">
+          <div class="msg msg--you"><div class="msg__col"><div class="msg__meta"><b>You</b>09:41</div><div class="msg__body r-card">Find why the ingest job failed last night.</div></div></div>
+          <div class="msg msg--agent">
+            <span class="avatar avatar--agent t-blue">OP</span>
+            <div class="msg__col" style="flex:1">
+              <div class="msg__meta"><b>ops-agent</b>09:41</div>
+              <div class="msg__body">
+                <p>The job hit the 512 MB memory limit at 02:14. The batch holds 50,000 rows at peak.</p>
+                <div class="stack" style="gap:8px">
+                  <div class="tool r-row is-open">
+                    <button class="tool__head" aria-expanded="true"><span class="chip r-chip t-green"><svg width="12" height="12"><use href="#i-check"/></svg>Passed</span><span class="tool__name">read_file</span><span class="tool__arg">src/ingest/worker.ts</span><span class="tool__dur">84 ms</span><svg class="tool__chev"><use href="#i-chev"/></svg></button>
+                    <div class="tool__body"><div><div class="tool__inner"><span class="label">Output</span><pre class="pre r-chip">const BATCH = 50_000 // 512 MB at peak</pre></div></div></div>
+                  </div>
+                  <div class="tool r-row">
+                    <button class="tool__head" aria-expanded="false"><span class="chip r-chip t-red"><svg width="12" height="12"><use href="#i-x"/></svg>Failed</span><span class="tool__name">deploy</span><span class="tool__arg">--env staging</span><span class="tool__dur">14 s</span><svg class="tool__chev"><use href="#i-chev"/></svg></button>
+                    <div class="tool__body"><div><div class="tool__inner"><span class="label">Error</span><pre class="pre r-chip">approval required for env=staging</pre></div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="event pill"><span class="dot t-amber"></span>Run paused: waits for your approval</div>
+          <div class="msg msg--agent">
+            <span class="avatar avatar--agent t-blue">OP</span>
+            <div class="msg__col"><div class="msg__meta"><b>ops-agent</b>now</div><div class="msg__body">I can raise the limit to 1 GB or split the batch into 10,000 rows<span class="caret"></span></div></div>
+          </div>
+          <div class="composer r-panel">
+            <textarea id="composer" rows="2" placeholder="Ask ops-agent…" aria-label="Message"></textarea>
+            <div class="composer__bar">
+              <button class="btn btn--quiet btn--icon btn--sm r-ctl" aria-label="Attach"><svg><use href="#i-clip"/></svg></button>
+              <span class="chip chip--line r-chip">story-ui</span>
+              <span class="chip chip--line r-chip">ingest/worker.ts</span>
+              <button class="btn btn--ink btn--icon r-ctl send" aria-label="Send"><svg><use href="#i-up"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="card r-card stack">
+          <div class="row" style="justify-content:space-between"><h3>Run #318 · fix-ingest-oom</h3><button class="btn btn--danger btn--sm r-ctl"><svg><use href="#i-stop"/></svg>Stop</button></div>
+          <ol class="steps">
+            <li class="step t-green"><span class="step__rail"><span class="step__node"><svg><use href="#i-check"/></svg></span></span><div class="step__body"><div class="step__row">Plan<span>passed · 3 s</span></div><div class="step__detail">4 steps, budget 40k tokens.</div></div></li>
+            <li class="step t-green"><span class="step__rail"><span class="step__node"><svg><use href="#i-check"/></svg></span></span><div class="step__body"><div class="step__row">Read code and logs<span>passed · 11 s</span></div></div></li>
+            <li class="step t-blue"><span class="step__rail"><span class="step__node breathe"><svg><use href="#i-run"/></svg></span></span><div class="step__body"><div class="step__row">Patch batch size<span>running</span></div><div class="step__detail">Editing src/ingest/worker.ts</div></div></li>
+            <li class="step t-grey is-wait"><span class="step__rail"><span class="step__node"><svg><use href="#i-dash"/></svg></span></span><div class="step__body"><div class="step__row">Run tests<span>queued</span></div></div></li>
+            <li class="step t-grey is-wait"><span class="step__rail"><span class="step__node"><svg><use href="#i-dash"/></svg></span></span><div class="step__body"><div class="step__row">Open pull request<span>queued</span></div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE BOOK -->
+  <section class="sec" id="guide">
+    <div class="sec__head"><h2>Guide book</h2><p>One reading column near 65 characters. Callouts are tinted wells. Code sits in a recessed well.</p></div>
+    <article class="doc r-panel">
+      <div class="doc__in">
+        <span class="eyebrow">Chapter 3 · Traces</span>
+        <h2>Follow one request through four services</h2>
+        <p class="lead">A trace records the path of one request. Each hop adds a span with a start time, a duration and a status.</p>
+        <div class="callout r-row t-blue"><svg><use href="#i-info"/></svg><b>In short</b><p>Metrics count events. Traces show the path of one request.</p></div>
+        <p>The SDK adds a <code>traceparent</code> header to every outgoing call. The next service reads it and continues the same trace.</p>
+        <div class="code r-row">
+          <div class="code__head">otel.config.ts<button class="btn btn--quiet btn--sm r-ctl" data-copy><svg><use href="#i-copy"/></svg>Copy</button></div>
+          <pre><span class="k">export const</span> sampler = <span class="k">new</span> TraceIdRatioBasedSampler(<span class="s">0.1</span>)
+<span class="c">// keep every error trace</span>
+<span class="k">export const</span> keepErrors = (span) =&gt; span.status.code === SpanStatusCode.ERROR</pre>
+        </div>
+        <div class="callout r-row t-green"><svg><use href="#i-bulb"/></svg><b>Good to know</b><p>At 400 spans per second, the queue holds about 5 seconds of spans.</p></div>
+        <h3>Sampling budget</h3>
+        <div class="table-wrap r-row">
+          <table>
+            <thead><tr><th>Traffic</th><th>Sample rate</th><th>Spans kept / s</th></tr></thead>
+            <tbody><tr><td>Below 200 req/s</td><td class="n">100%</td><td class="n">200</td></tr><tr><td>200 – 2,000 req/s</td><td class="n">25%</td><td class="n">500</td></tr><tr><td>Above 2,000 req/s</td><td class="n">10%</td><td class="n">200+</td></tr></tbody>
+          </table>
+        </div>
+        <div class="callout r-row t-amber"><svg><use href="#i-warn"/></svg><b>Watch out</b><p>A label with user IDs creates one time series for each user.</p></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="sec" id="charts">
+    <div class="sec__head"><h2>Charts and diagrams</h2><p>Thin marks, a faint grid, text in ink tokens. Hover any chart for values. Diagrams use dashed zones and one inverted node for "now".</p></div>
+    <div class="frame r-panel stack">
+      <div class="grid g2">
+        <div class="card r-card stack">
+          <div class="row" style="justify-content:space-between"><h3>Latency by service</h3><div class="seg seg--sm pill" data-seg><span class="seg__thumb pill"></span><button>24h</button><button aria-selected="true">7d</button></div></div>
+          <div class="chart" id="line"></div>
+        </div>
+        <div class="card r-card stack">
+          <h3>Tasks closed per day</h3>
+          <div class="chart" id="bars"></div>
+        </div>
+      </div>
+      <div class="card r-card stack">
+        <h3>Engineering harness</h3>
+        <div class="stage r-row">
+          <svg viewBox="0 0 980 312" role="img" aria-label="Harness flow: You brief the planner, the planner drives the tool sandbox, the review gate checks the diff, then the repository merges.">
+            <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
+            <rect class="zone" x="12" y="20" width="220" height="280" rx="16"/><text class="zone-l" x="28" y="42">YOU</text>
+            <rect class="zone" x="252" y="20" width="470" height="280" rx="16"/><text class="zone-l" x="268" y="42">HARNESS · SANDBOX</text>
+            <rect class="zone" x="742" y="20" width="226" height="280" rx="16"/><text class="zone-l" x="758" y="42">REPOSITORY</text>
+            <path class="edge" d="M196,150 L284,150" marker-end="url(#ah)"/><text class="edge-l" x="212" y="140">brief</text>
+            <path class="edge live" d="M444,150 L520,150" marker-end="url(#ah)"/>
+            <path class="edge" d="M605,180 L605,216" marker-end="url(#ah)"/><text class="edge-l" x="613" y="203">diff</text>
+            <path class="edge dash" d="M690,250 L784,250" marker-end="url(#ah)"/><text class="edge-l" x="710" y="240">merge</text>
+            <path class="edge dash" d="M520,250 C460,250 400,224 380,184" marker-end="url(#ah)"/><text class="edge-l" x="412" y="262">rework</text>
+            <g class="node"><rect x="36" y="120" width="160" height="60" rx="14"/><text class="k" x="52" y="143">HUMAN</text><text class="t" x="52" y="163">Lam · task brief</text></g>
+            <g class="node is-now"><rect x="284" y="120" width="160" height="60" rx="14"/><text class="k" x="300" y="143">AGENT · NOW</text><text class="t" x="300" y="163">planner-agent</text></g>
+            <g class="node"><rect x="520" y="120" width="170" height="60" rx="14"/><text class="k" x="536" y="143">TOOLS</text><text class="t" x="536" y="163">read · edit · test</text></g>
+            <g class="node is-gate"><rect x="520" y="220" width="170" height="60" rx="14"/><text class="k" x="536" y="243">GATE</text><text class="t" x="536" y="263">Review gate</text></g>
+            <g class="node"><rect x="784" y="220" width="160" height="60" rx="14"/><text class="k" x="800" y="243">STORE</text><text class="t" x="800" y="263">Pull request</text></g>
+          </svg>
+        </div>
+        <p class="note">Solid edge: a call. Moving blue dashes: work that runs now. Grey dashes: a later step or a loop back.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const store = { get(k) { try { return localStorage.getItem('lumen-v2-' + k); } catch { return null; } }, set(k, v) { try { localStorage.setItem('lumen-v2-' + k, v); } catch {} } };
+
+  function placeThumb(seg) {
+    const thumb = seg.querySelector('.seg__thumb');
+    const on = seg.querySelector('button[aria-selected="true"]');
+    if (!thumb || !on) return;
+    thumb.style.width = on.offsetWidth + 'px';
+    thumb.style.transform = `translateX(${on.offsetLeft}px)`;
+  }
+  function bindSeg(seg, onPick) {
+    seg.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      seg.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+      placeThumb(seg); onPick?.(b.dataset.v);
+    });
+  }
+
+  const apply = {
+    theme(v) { if (v === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', v); },
+    corner(v) { if (v === 'round') root.setAttribute('data-corner', 'round'); else root.removeAttribute('data-corner'); },
+    radius(v) { if (v === 'subtle') root.setAttribute('data-radius', 'subtle'); else root.removeAttribute('data-radius'); },
+  };
+  function showRadii() {
+    const cs = getComputedStyle(root);
+    const k = parseFloat(cs.getPropertyValue('--k')) || 1;
+    document.querySelectorAll('.rv').forEach((el) => {
+      const base = parseFloat(cs.getPropertyValue('--r-' + el.dataset.r));
+      el.textContent = k === 1 ? `${base}px` : `${base}px × ${k}`;
+    });
+  }
+  document.querySelectorAll('[data-knob]').forEach((seg) => {
+    const key = seg.dataset.knob;
+    const saved = store.get(key);
+    if (saved) {
+      seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.v === saved)));
+      apply[key](saved);
+    }
+    bindSeg(seg, (v) => { apply[key](v); store.set(key, v); showRadii(); document.querySelectorAll('.seg').forEach(placeThumb); });
+  });
+  document.querySelectorAll('[data-seg]').forEach((seg) => bindSeg(seg));
+  document.querySelectorAll('[data-tabs]').forEach((tabs) => tabs.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    tabs.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+  }));
+  document.querySelectorAll('.tool__head').forEach((h) => h.addEventListener('click', () => {
+    const t = h.closest('.tool'); t.classList.toggle('is-open'); h.setAttribute('aria-expanded', String(t.classList.contains('is-open')));
+  }));
+  document.querySelectorAll('.item').forEach((it) => it.addEventListener('click', () => {
+    document.querySelectorAll('.item.is-selected').forEach((x) => x !== it && x.classList.remove('is-selected'));
+    it.classList.toggle('is-selected');
+  }));
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const text = b.closest('.code').querySelector('pre').textContent;
+    try { await navigator.clipboard.writeText(text); b.lastChild.textContent = 'Copied'; } catch { b.lastChild.textContent = 'Select to copy'; }
+    setTimeout(() => { b.lastChild.textContent = 'Copy'; }, 1400);
+  }));
+
+  // charts: one linear scale per chart; ticks on a 1-2-2.5-5 step so labels read as round numbers
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent?.appendChild(n); return n; };
+  const niceStep = (raw) => { const m = 10 ** Math.floor(Math.log10(raw)); return ([1, 2, 2.5, 5, 10].find((s) => s * m >= raw)) * m; };
+  function axis(max, count = 4) { const step = niceStep(max / count); return { top: Math.ceil(max / step) * step, step }; }
+  function tooltip(host) { const t = document.createElement('div'); t.className = 'tip r-row'; host.appendChild(t); return t; }
+  function showTip(t, host, x, y, title, rows) {
+    t.innerHTML = `<b>${title}</b>` + rows.map((r) => `<div><i style="background:${r.c}"></i><span>${r.n}</span><span>${r.v}</span></div>`).join('');
+    const w = host.clientWidth; const left = x > w - 180 ? x - t.offsetWidth - 12 : x + 12;
+    t.style.left = left + 'px'; t.style.top = Math.max(0, y - 30) + 'px'; t.classList.add('on');
+  }
+
+  function lineChart(host) {
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const series = [
+      { n: 'api', c: 'var(--c1)', v: [120, 118, 160, 210, 190, 150, 130] },
+      { n: 'ingest', c: 'var(--c2)', v: [300, 280, 260, 340, 420, 380, 310] },
+      { n: 'search', c: 'var(--c3)', v: [80, 90, 110, 140, 120, 100, 90] },
+    ];
+    host.innerHTML = '<div class="legend">' + series.map((s) => `<span><i style="background:${s.c}"></i>${s.n}</span>`).join('') + '</div>';
+    const W = 520, H = 220, P = { l: 36, r: 56, t: 8, b: 24 };
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Latency by service, ms, 7 days' }, host);
+    const { top, step } = axis(Math.max(...series.flatMap((s) => s.v)));
+    const y = (v) => P.t + (1 - v / top) * (H - P.t - P.b);
+    const x = (i) => P.l + i * (W - P.l - P.r) / (labels.length - 1);
+    for (let v = 0; v <= top; v += step) { el('line', { class: 'grid-l', x1: P.l, x2: W - P.r, y1: y(v), y2: y(v) }, svg); el('text', { class: 'ax', x: P.l - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg).textContent = v; }
+    labels.forEach((l, i) => { el('text', { class: 'ax', x: x(i), y: H - 6, 'text-anchor': 'middle' }, svg).textContent = l; });
+    const cross = el('line', { stroke: 'var(--border-strong)', y1: P.t, y2: H - P.b, opacity: 0 }, svg);
+    series.forEach((s) => {
+      el('path', { d: s.v.map((v, i) => `${i ? 'L' : 'M'}${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: s.c, 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg);
+      el('text', { class: 'ax', x: x(labels.length - 1) + 8, y: y(s.v.at(-1)) + 4, 'font-weight': 500 }, svg).textContent = s.n;
+    });
+    const dots = series.map((s) => el('circle', { r: 4.5, fill: s.c, stroke: 'var(--surface)', 'stroke-width': 2, opacity: 0 }, svg));
+    const tip = tooltip(host);
+    svg.addEventListener('pointermove', (e) => {
+      const box = svg.getBoundingClientRect(); const sx = (e.clientX - box.left) * W / box.width;
+      const i = Math.max(0, Math.min(labels.length - 1, Math.round((sx - P.l) / ((W - P.l - P.r) / (labels.length - 1)))));
+      cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1);
+      dots.forEach((d, k) => { d.setAttribute('cx', x(i)); d.setAttribute('cy', y(series[k].v[i])); d.setAttribute('opacity', 1); });
+      showTip(tip, host, x(i) * box.width / W, (box.top - host.getBoundingClientRect().top) + 60, labels[i], series.map((s) => ({ n: s.n, c: s.c, v: s.v[i] + ' ms' })));
+    });
+    svg.addEventListener('pointerleave', () => { tip.classList.remove('on'); cross.setAttribute('opacity', 0); dots.forEach((d) => d.setAttribute('opacity', 0)); });
+  }
+
+  function barChart(host) {
+    const data = [['Mon', 6], ['Tue', 9], ['Wed', 4], ['Thu', 11], ['Fri', 8], ['Sat', 2], ['Sun', 3]];
+    const W = 520, H = 244, P = { l: 30, r: 8, t: 8, b: 24 };
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Tasks closed per day' }, host);
+    const { top, step } = axis(Math.max(...data.map((d) => d[1])));
+    const y = (v) => P.t + (1 - v / top) * (H - P.t - P.b);
+    const band = (W - P.l - P.r) / data.length, bw = band * 0.56;
+    for (let v = 0; v <= top; v += step) { el('line', { class: 'grid-l', x1: P.l, x2: W - P.r, y1: y(v), y2: y(v) }, svg); el('text', { class: 'ax', x: P.l - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg).textContent = v; }
+    const tip = tooltip(host);
+    const bars = data.map(([l, v], i) => {
+      const bx = P.l + i * band + (band - bw) / 2, by = y(v), bh = H - P.b - by, r = Math.min(4, bh);
+      const p = el('path', { d: `M${bx},${by + bh} V${by + r} Q${bx},${by} ${bx + r},${by} H${bx + bw - r} Q${bx + bw},${by} ${bx + bw},${by + r} V${by + bh} Z`, fill: 'var(--c1)', style: 'transition:opacity 160ms' }, svg);
+      el('text', { class: 'ax', x: bx + bw / 2, y: H - 6, 'text-anchor': 'middle' }, svg).textContent = l;
+      const hit = el('rect', { x: P.l + i * band, y: P.t, width: band, height: H - P.t - P.b, fill: 'transparent' }, svg);
+      hit.addEventListener('pointerenter', () => {
+        bars.forEach((b, k) => b.style.opacity = k === i ? 1 : .5);
+        const box = svg.getBoundingClientRect();
+        showTip(tip, host, (bx + bw / 2) * box.width / W, by * box.height / H, l, [{ n: 'Closed', c: 'var(--c1)', v: v }]);
+      });
+      return p;
+    });
+    svg.addEventListener('pointerleave', () => { tip.classList.remove('on'); bars.forEach((b) => b.style.opacity = 1); });
+  }
+
+  lineChart(document.getElementById('line'));
+  barChart(document.getElementById('bars'));
+  showRadii();
+  const place = () => document.querySelectorAll('.seg').forEach(placeThumb);
+  place();
+  document.fonts?.ready.then(place);
+  addEventListener('resize', place);
+})();
+</script>
