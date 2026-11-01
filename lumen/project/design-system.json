@@ -1,14 +1,24 @@
 {
   "v": 3,
   "layout": "files",
-  "createdOnFiles": { "v": 1, "at": "2026-11-01T08:47:40Z" },
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-01T08:47:40Z"
+  },
   "title": "Lumen",
   "namespace": "Lumen",
-  "libraries": [{ "name": "react", "version": "18" }, { "name": "react-dom", "version": "18" }],
+  "libraries": [],
   "sections": {},
   "groups": [],
   "assetGroups": {},
   "blobs": {},
-  "docs": { "sections": [] },
-  "lastChange": { "by": "Lam Tran", "at": "2026-11-01T08:47:40Z", "via": "Claude Code", "note": "First release: tokens, 20 components, cover" }
+  "docs": {
+    "sections": []
+  },
+  "lastChange": {
+    "by": "Lam Tran",
+    "at": "2026-11-01T11:10:22Z",
+    "via": "Claude Code",
+    "note": "Remove v1 content; v2 in review"
+  }
 }
