@@ -1,4 +1,5 @@
 <title>Lumen v2 Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
@@ -17,7 +18,7 @@
   --border-strong: oklch(.82 .008 265);
   --fg: oklch(.21 .012 265);
   --fg-muted: oklch(.48 .014 265);
-  --fg-subtle: oklch(.56 .012 265);
+  --fg-subtle: oklch(.52 .012 265);
   --on-ink: oklch(.99 0 0);
   --ink-hover: oklch(.3 .014 265);
   --blue: oklch(.54 .19 264); --blue-ink: oklch(.48 .19 264); --blue-subtle: oklch(.955 .028 264);
@@ -167,6 +168,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .rel a { text-decoration: none; }
 .rel .none { font-size: 13px; color: var(--fg-subtle); }
 .props-wrap { overflow-x: auto; box-shadow: inset 0 0 0 1px var(--hair); }
+/* on narrow screens the overview table scrolls sideways so chip cells stay one line tall */
+@media (max-width: 860px) { .ov-table { min-width: 720px; } .ov-table td .row { flex-wrap: nowrap; } .ov-table td { white-space: nowrap; } }
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
 th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--hair); vertical-align: top; }
 th { font-weight: 500; color: var(--fg-muted); font-size: 12px; background: var(--bg-muted); }
@@ -1219,7 +1222,7 @@ a.tag:hover { color: var(--fg); box-shadow: inset 0 0 0 1px var(--border-strong)
     return `${crumb('Docs')}<div class="doc-head"><div><h1>Lumen v2</h1><p>A general-purpose design system for any product: apps, settings, commerce, dashboards, docs and agent tools. <b>Units</b> are the smallest parts. <b>Compositions</b> combine units into generic patterns. A product screen combines compositions.</p></div><div class="row">${U.badge({ tone: 'grey', label: units.length + ' units' })}${U.badge({ tone: 'violet', label: comps.length + ' compositions' })}</div></div>
       <div class="prose"><ul><li>Each page has a Playground with Controls and Code, then Stories, then Props.</li><li>A composition lists the units it is <b>built from</b>. A unit lists where it is <b>used in</b>.</li><li>The toolbar switches theme, corner shape and radius level for every page.</li></ul></div>
       <h2 class="doc-h2">Component unit list <small>${ENTRIES.length} components</small></h2>
-      <div class="props-wrap r-row"><table><thead><tr><th>Name</th><th>Level</th><th>Group</th><th>Built from</th><th>Used in</th></tr></thead><tbody>${ENTRIES.map((e) => `<tr><td><a href="#${e.id}" style="color:var(--fg);font-weight:500;text-decoration:none">${esc(e.name)}</a></td><td>${levelBadge(e)}</td><td class="muted">${esc(e.group)}</td><td><div class="row" style="gap:4px">${(e.uses ?? []).map(chip).join('') || '<span class="muted">—</span>'}</div></td><td><div class="row" style="gap:4px">${usedIn(e.id).map((u) => chip(u.id)).join('') || '<span class="muted">—</span>'}</div></td></tr>`).join('')}</tbody></table></div>
+      <div class="props-wrap r-row"><table class="ov-table"><thead><tr><th>Name</th><th>Level</th><th>Group</th><th>Built from</th><th>Used in</th></tr></thead><tbody>${ENTRIES.map((e) => `<tr><td><a href="#${e.id}" style="color:var(--fg);font-weight:500;text-decoration:none">${esc(e.name)}</a></td><td>${levelBadge(e)}</td><td class="muted">${esc(e.group)}</td><td><div class="row" style="gap:4px">${(e.uses ?? []).map(chip).join('') || '<span class="muted">—</span>'}</div></td><td><div class="row" style="gap:4px">${usedIn(e.id).map((u) => chip(u.id)).join('') || '<span class="muted">—</span>'}</div></td></tr>`).join('')}</tbody></table></div>
       <h2 class="doc-h2">Examples <small>screens from different products, made only of compositions</small></h2>
       <div class="overview-grid">${EXAMPLES.map((e) => `<a class="ov-card r-card" href="#${e.id}"><span class="k">EXAMPLE</span><b>${esc(e.name)}</b><span>${esc(e.summary)}</span></a>`).join('')}</div>`;
   }
